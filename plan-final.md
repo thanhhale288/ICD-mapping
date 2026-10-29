@@ -49,7 +49,7 @@ flowchart TD
     P5 --> P6["Phase 6: Kiểm tra đầu ra và bàn giao"]
 ```
 
-Phase 2 và 3 chạy song song được sau khi xong Phase 1.
+Phase 1 và Phase 2 đã đóng (30/10/2026). Phase 3 chạy được ngay (song song với duyệt tay Phase 4 khi đã có đủ đề xuất từ P2/P3).
 
 ---
 
@@ -115,28 +115,34 @@ Phase 2 và 3 chạy song song được sau khi xong Phase 1.
 
 ---
 
-## Phase 2 – Kiểm tra link và thông tin hiện có (yêu cầu 1 và 3)
+## Phase 2 – Kiểm tra link và thông tin hiện có (yêu cầu 1 và 3) — **ĐÓNG 30/10/2026**
 
-**P2.1 – Kiểm 30 link khác nhau ở cột E**
+Đủ DoD: `data/link_check.csv` (30/30 URL cột E) + `data/sai_lech.csv` (P2.1–P2.4) + `scripts/phase2_sai_lech.py`. Nghiệm thu: `python3 scripts/check_links.py tong-hop` rồi `python3 scripts/phase2_sai_lech.py`. Tiếp theo: Phase 3 (song song được) hoặc Phase 4 sau khi có đủ đề xuất.
+
+**P2.1 – Kiểm 30 link khác nhau ở cột E** — **XONG 30/10/2026**
 - Chạy `check_links.py` cho toàn bộ cột E.
 - Mọi link `LINK_CHẾT`, `MỞ_ĐƯỢC_KHÔNG_KHỚP`, link trùng giữa hai ICD, hoặc link nhóm QĐ 428 chỉ đạt `CHỈ_KHỚP_CHUNG` đều được ghi vào `data/sai_lech.csv`.
 - *Xong khi:* 30/30 link có trạng thái. Không còn link nào `BỊ_CHẶN` mà chưa có nguồn thay thế hoặc chưa được mở tay.
+- *Kết quả 30/10/2026:* 30 unique URL — `MỞ_ĐƯỢC_KHỚP` 3, `CHỈ_KHỚP_CHUNG` 9, `LINK_CHẾT` 2, `MỞ_ĐƯỢC_KHÔNG_KHỚP` 1, `LỖI_SSL_MỞ_ĐƯỢC` 1, `BỊ_CHẶN` 14 (TVPL Cloudflare). Mọi `BỊ_CHẶN` đã có nguồn thay (cổng tỉnh / luatvietnam / vanban.chinhphu) hoặc đưa vào `data/can_mo_tay.csv` (STT 21, 27, 31, 40, 123, 126).
 
-**P2.2 – Kiểm các điểm nghi sai đã biết** (Phụ lục E, mục 0–9)
+**P2.2 – Kiểm các điểm nghi sai đã biết** (Phụ lục E, mục 0–9) — **XONG 30/10/2026**
 - Với từng điểm: tìm văn bản gốc, rồi kết luận "đúng", "sai" hoặc "chưa đủ nguồn", kèm link.
 - *Xong khi:* mỗi điểm có một dòng kết luận trong `data/sai_lech.csv`.
+- *Kết quả:* E.0–E.7 = sai (có đề xuất + link thay); E.8 QH tỉnh = đúng; E.9 nhóm 428 = ghi_nhan (chi tiết lệch ở P2.3).
 
-**P2.3 – Đối chiếu số và ngày quyết định**
+**P2.3 – Đối chiếu số và ngày quyết định** — **XONG 30/10/2026**
 - 19 quyết định mở cảng của nhóm QĐ 428, gồm tra số còn thiếu cho STT 9 và STT 15.
 - Các văn bản quy hoạch tỉnh: 2279 (Khánh Hòa), 5455 (Hải Phòng), 568 (Ninh Bình), 779 (Đồng Nai), 01/NQ-HĐND (Lai Châu, Cà Mau).
 - *Xong khi:* mỗi số quyết định có link văn bản gốc và kết luận khớp hoặc lệch.
+- *Phát hiện chính:* STT 9 → `1246/QĐ-BGTVT`; STT 15 → `07/QĐ-BGTVT` (06/01/2023); STT 4 ngày sai (2015→2016); STT 13 số sai (`684`→`584`); STT 8 mở bằng `1543/QĐ-BGTVT` (19/8/2021). QH tỉnh 2279/5455/568/779/01-NQ khớp nguồn công khai; Cà Mau bổ sung ngày 25/02/2026.
 
-**P2.4 – Quét lỗi định dạng và ghi chú nội bộ trong toàn file**
+**P2.4 – Quét lỗi định dạng và ghi chú nội bộ trong toàn file** — **XONG 30/10/2026**
 - Số thập phân lỗi như `8,1910900000000009`.
 - Chữ "Excel gốc".
 - Cụm "cần tra cứu số".
 - Tên ở sheet chi tiết lệch tên ở `Tổng hợp`.
 - *Xong khi:* đã quét cả 127 sheet, kết quả nằm trong `data/sai_lech.csv`.
+- *Kết quả:* float STT 10 & 18; "Excel gốc" STT 19 (4 ô); "cần tra cứu số" STT 9 & 15; không lệch tên Tổng hợp ↔ chi tiết.
 
 ---
 

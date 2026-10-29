@@ -106,7 +106,7 @@ def _search_brave(query: str, count: int) -> list[SearchHit]:
             params={
                 "q": query,
                 "count": min(count, 20),
-                "country": "VN",
+                # Brave không nhận "VN"; bỏ country, giữ search_lang=vi.
                 "search_lang": "vi",
             },
         )
