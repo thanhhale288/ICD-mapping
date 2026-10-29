@@ -80,15 +80,17 @@ Phase 2 và 3 chạy song song được sau khi xong Phase 1.
 
 ---
 
-## Phase 1 – Công cụ mở trang và kiểm link
+## Phase 1 – Công cụ mở trang và kiểm link — **ĐÓNG 30/10/2026**
 
-**P1.1 – `scripts/fetch.py`: mở trang theo 4 tầng** (chi tiết ở Phụ lục C)
+Đủ DoD: `fetch.py` (4 tầng) + `match.py` (khớp ICD) + `check_links.py` (CSV ổn định). Nghiệm thu: `python3 scripts/fetch.py test`, `match.py test`, `check_links.py test`. Tiếp theo: Phase 2 và 3 (song song được).
+
+**P1.1 – `scripts/fetch.py`: mở trang theo 4 tầng** (chi tiết ở Phụ lục C) — **XONG 30/10/2026**
 - Tầng 1, `httpx`:
   - header như Chrome, thử lại 2 lần
   - lỗi SSL thì thử lại bỏ kiểm chứng chỉ và gắn cờ
   - PDF thì trích chữ bằng `pdfplumber`, dự phòng `fitz`
 - Tầng 2, Playwright chạy Chrome ẩn.
-- Tầng 3, Playwright chạy Chrome có giao diện, giữ cookie trong `.browser-profile/`, chạy tuần tự, chờ tối đa 20 giây.
+- Tầng 3, Playwright chạy Chrome có giao diện, giữ cookie trong `.browser-profile/`, chạy tuần tự, chờ tối đa 25 giây (stealth để qua Cloudflare).
 - Tầng 4: không tự vượt, chuyển sang tìm nguồn thay thế hoặc đưa vào `data/can_mo_tay.csv`.
 - Cache 7 ngày. Mỗi tên miền 1 request mỗi 3–5 giây. Lưu ảnh chụp, chữ trích và thời điểm vào `evidence/`.
 - *Xong khi:* chạy thử đúng như lần thử ngày 28/10:
@@ -96,17 +98,20 @@ Phase 2 và 3 chạy song song được sau khi xong Phase 1.
   - vimawa mở được với cờ SSL
   - mt.gov.vn ra `LINK_CHẾT`
   - baochinhphu không bị nhận nhầm là bị chặn
+- *Kết quả nghiệm thu 30/10/2026 (`python3 scripts/fetch.py test`):* 4/4 PASS. Ghi chú: node `vimawa.gov.vn/vi/node/15406` hiện trả Drupal Access denied (khác 28/10); SSL fallback vẫn đúng — cần nguồn thay ở P2.
 
-**P1.2 – `scripts/match.py`: chấm "trang có đúng ICD không"** (Phụ lục D)
+**P1.2 – `scripts/match.py`: chấm "trang có đúng ICD không"** (Phụ lục D) — **XONG 30/10/2026**
 - Khớp khi tên giống từ 90 trở lên (theo `rapidfuzz`, sau khi bỏ dấu) **và** có ít nhất một khóa phụ.
 - Trang nhắc từ 3 ICD khác trở lên thì xếp `CHỈ_KHỚP_CHUNG`.
 - Địa bàn trên trang thuộc ICD khác thì chuyển link cho ICD đó.
 - *Xong khi:* chấm đúng các ca mẫu: 3 dòng Long Bình, 2 dòng Tân Lập, Thạnh Phước và Thanh Phước, link QĐ 979.
+- *Kết quả nghiệm thu 30/10/2026 (`python3 scripts/match.py test`):* 10/10 PASS (gồm ca chuyển địa bàn Long Bình 15→126 và Thạnh Phước 18→116).
 
-**P1.3 – `scripts/check_links.py`: ghi kết quả kiểm link**
+**P1.3 – `scripts/check_links.py`: ghi kết quả kiểm link** — **XONG 30/10/2026**
 - Nhận danh sách URL, gọi `fetch.py` rồi `match.py`.
 - Ghi ra `data/link_check.csv` với các cột: STT, URL, nguồn, tầng mở được, mã HTTP, URL cuối, tiêu đề, loại nội dung, trạng thái (Phụ lục B), lý do, khớp tên, khớp địa bàn, số ICD khác được nhắc, ảnh chụp, thời điểm.
 - *Xong khi:* chạy lại nhiều lần trên cùng URL cho cùng kết quả.
+- *Kết quả nghiệm thu 30/10/2026 (`python3 scripts/check_links.py test`):* 2 lần cùng URL → cùng status; lần 2 lấy từ cache. Chạy cả cột E: `python3 scripts/check_links.py tong-hop`.
 
 ---
 

@@ -3,7 +3,11 @@
 cache/
 evidence/
 .browser-profile/
+.browser-profile-*/
 __pycache__/
 *.pyc
 .venv/
 venv/
+data/link_check.csv
+data/link_check_stability.csv
+data/can_mo_tay.csv
