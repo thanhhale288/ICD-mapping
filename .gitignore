@@ -11,3 +11,5 @@ venv/
 data/link_check.csv
 data/link_check_stability.csv
 data/can_mo_tay.csv
+data/phase2_summary.json
+# data/sai_lech.csv — commit kết quả Phase 2
