@@ -49,7 +49,7 @@ flowchart TD
     P5 --> P6["Phase 6: Kiểm tra đầu ra và bàn giao"]
 ```
 
-Phase 1 và Phase 2 đã đóng (30/10/2026). Phase 3 chạy được ngay (song song với duyệt tay Phase 4 khi đã có đủ đề xuất từ P2/P3).
+Phase 1–3 đã đóng (30/10/2026). Phase 3 đã scale tối đa (0 URL ứng viên unchecked). Tiếp theo: Phase 4 duyệt tay → Phase 5 ghi Excel.
 
 ---
 
@@ -146,55 +146,37 @@ Phase 1 và Phase 2 đã đóng (30/10/2026). Phase 3 chạy được ngay (song
 
 ---
 
-## Phase 3 – Tra cứu, bổ sung và chọn link mới (yêu cầu 1 và 2)
+## Phase 3 – Tra cứu, bổ sung và chọn link mới (yêu cầu 1 và 2) — **ĐÓNG 30/10/2026**
 
-**P3.1 – Lấy danh mục mạng lưới của các nhà khai thác**
+Đủ DoD (scale tối đa): `ung_vien.csv` (128 STT × ≥2 query) + `ung_vien_check.csv` (**0 URL unchecked**, 663 dòng) + `verify_website.py` + `link_chon.csv` (128; **44** có URL G, QĐ 428 **19/19**) + `trang_thai_de_xuat.csv` (128) + `tra_cuu.csv` + `phase3_report.html` / `phase3_summary.json`. Nghiệm thu: `verify_website.py test`, `pick_links.py test`, `propose_status.py test`, `check_links.py ung-vien --unchecked-only --per-stt 0`. Tiếp theo: Phase 4 duyệt tay (ưu tiên mọi dòng Đang hoạt động / Đang xây dựng và ~36 link G ghi chú cần P4).
+
+**P3.1 – Lấy danh mục mạng lưới của các nhà khai thác** — **XONG 30/10/2026**
 - Đọc trang "mạng lưới / hệ thống ICD" của Tân Cảng Sài Gòn, Gemadept, VIMC, TBS, Transimex, Hateco, Sotrans.
-- Ghép tên ICD với URL vào `data/ung_vien.csv`.
-- *Xong khi:* mỗi nhà khai thác có danh sách ICD và URL trang con.
+- Ghép tên ICD với URL vào `data/ung_vien.csv` (`scripts/phase3_operators.py` → `operator_networks.json`).
+- *Kết quả:* 7/7 nhà khai thác; 23 dòng `operator_network` (18 khớp STT).
 
-**P3.2 – Tìm link ứng viên theo 3 lô**
-- Mẫu truy vấn:
-  - `"cảng cạn <tên>" <tỉnh mới>`
-  - `"ICD <tên>" <tỉnh cũ>`
-  - kèm một trong các từ: công bố mở, khánh thành, khởi công, chủ đầu tư, website
-- Mỗi ICD chạy 3–4 truy vấn, lấy 10 kết quả đầu. Không cào trực tiếp trang kết quả Google.
-- **Lô A**: 19 ICD nhóm QĐ 428, gồm sheet 08.
-- **Lô B**: các ICD trùng tên, cùng các ICD có thể đang hoạt động dù ghi là quy hoạch (Sóng Thần 106, TBS Tân Vạn 107, Long Bình 98...), và mọi ICD có tên trong danh mục ở P3.1.
-- **Lô C**: các ICD còn lại.
-- *Xong khi:* mỗi ICD có ít nhất 2 lượt tìm, ghi vào `data/ung_vien.csv`.
+**P3.2 – Tìm link ứng viên theo 3 lô** — **XONG 30/10/2026**
+- Cascade Brave → Google qua `scripts/search.py` / `phase3_search.py` (không cào SERP HTML).
+- Lô A (19 QĐ 428) + Lô B (trùng tên / nghi đang chạy) + Lô C (còn lại).
+- *Kết quả:* 128/128 STT ≥2 query; ~662 URL ứng viên unique trong `ung_vien.csv`.
 
-**P3.3 – Kiểm từng link ứng viên**
-- Chạy `check_links.py` trên toàn bộ `data/ung_vien.csv`. Chỉ giữ link `MỞ_ĐƯỢC_KHỚP`.
-- *Xong khi:* mọi ứng viên đã có trạng thái.
+**P3.3 – Kiểm từng link ứng viên** — **XONG 30/10/2026**
+- `check_links.py ung-vien --unchecked-only --per-stt 0` (có `--max-tier`).
+- *Kết quả:* 0 unchecked; `MỞ_ĐƯỢC_KHỚP` 167 · `CHỈ_KHỚP_CHUNG` 313 · còn lại LINK_CHẾT / KHÔNG_KHỚP / BỊ_CHẶN (TVPL Cloudflare). Chi tiết: `phase3_scale_check.json`.
 
-**P3.4 – `scripts/verify_website.py`: xác minh website chính chủ** (Phụ lục F)
-- Tín hiệu mạnh:
-  - S1: mã số thuế trùng với nguồn độc lập
-  - S2: tên pháp nhân và địa chỉ khớp quyết định mở cảng
-  - S3: được tập đoàn mẹ hoặc văn bản nhà nước trỏ tới
-- Tín hiệu phụ: P1 tên miền chứa thương hiệu, P2 nội dung chuyên về ICD và mới cập nhật.
-- Loại ngay trang danh bạ và trang tin tổng hợp.
-- *Xong khi:* mỗi website ứng viên được xếp "chính thức – đã xác minh", "có khả năng – cần xác nhận" hoặc "loại".
+**P3.4 – `scripts/verify_website.py`: xác minh website chính chủ** (Phụ lục F) — **XONG 30/10/2026**
+- Tín hiệu S1–S3 / P1–P2; loại danh bạ. CLI: `test` | `<stt> <url>` | `from-csv`.
+- *Kết quả nghiệm thu:* unit test PASS; `website_verify.csv` có kết luận chính thức / có khả năng / loại.
 
-**P3.5 – `scripts/pick_links.py`: chọn link cho cột G**
-- Thứ tự ưu tiên:
-  1. Website chính thức đã xác minh (trang riêng của ICD)
-  2. Văn bản nhà nước riêng về ICD
-  3. Bài báo chính thống riêng về ICD, mới nhất, ưu tiên trong 24 tháng
-- Các link còn lại vào danh sách nguồn kiểm chứng (dòng 15 của sheet chi tiết).
-- Ghi ra `data/link_chon.csv`.
-- *Xong khi:* 128 dòng. Dòng nào không có link thì ghi rõ lý do.
+**P3.5 – `scripts/pick_links.py`: chọn link cho cột G** — **XONG 30/10/2026**
+- Ưu tiên: website đã xác minh → VB nhà nước riêng → báo riêng (≤24 tháng).
+- *Kết quả:* 128 dòng `link_chon.csv`; 44 có URL G (QĐ 428 đủ 19/19); 84 trống có lý do (không đoán).
 
-**P3.6 – Trích thông tin bổ sung cho các ô đang trống**
-- Gồm: chủ đầu tư, đơn vị khai thác, quy mô, dịch vụ, hãng tàu, kết nối vận tải, khách hàng.
-- Mỗi giá trị ghi một dòng vào `data/tra_cuu.csv`: STT, hạng mục, giá trị, URL, ngày của nguồn, câu trích dẫn.
-- Không có nguồn thì không điền.
-- *Xong khi:* mọi giá trị đều có URL và câu trích.
+**P3.6 – Trích thông tin bổ sung** — **XONG 30/10/2026** (`extract_tra_cuu.py`)
+- *Kết quả:* `tra_cuu.csv` — chỉ giá trị có URL + câu trích (không nguồn thì không điền).
 
-**P3.7 – Máy đề xuất trạng thái hoạt động** (Phụ lục A và quy tắc ở Phụ lục C.5)
-- Dựa trên nội dung các trang `MỞ_ĐƯỢC_KHỚP` có ghi ngày, máy đề xuất một trong 6 trạng thái, kèm câu trích, URL và ảnh chụp.
-- *Xong khi:* 128/128 ICD có đề xuất trong `data/trang_thai_de_xuat.csv`.
+**P3.7 – Máy đề xuất trạng thái hoạt động** — **XONG 30/10/2026** (`propose_status.py`)
+- *Kết quả:* 128/128 trong `trang_thai_de_xuat.csv` (máy đề xuất; bắt buộc duyệt tay ở P4 trước khi ghi Excel).
 
 ---
 

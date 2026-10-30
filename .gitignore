@@ -12,4 +12,6 @@ data/link_check.csv
 data/link_check_stability.csv
 data/can_mo_tay.csv
 data/phase2_summary.json
+data/website_verify_test.csv
 # data/sai_lech.csv — commit kết quả Phase 2
+# Phase 3 outputs (ung_vien*, link_chon, trang_thai*, tra_cuu, phase3_*) — commit

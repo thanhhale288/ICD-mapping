@@ -12,6 +12,7 @@ Không kết luận BỊ_CHẶN chỉ vì HTML có chữ "captcha" (baochinhphu)
 from __future__ import annotations
 
 import hashlib
+import html as html_lib
 import json
 import random
 import re
@@ -149,6 +150,7 @@ def _extract_title(html: str) -> str:
         return ""
     title = re.sub(r"\s+", " ", m.group(1)).strip()
     title = re.sub(r"<[^>]+>", "", title)
+    title = html_lib.unescape(title)
     return title[:300]
 
 
@@ -160,11 +162,9 @@ def _html_to_text(html: str) -> str:
     cleaned = re.sub(r"(?is)</p>", "\n", cleaned)
     cleaned = re.sub(r"(?is)</(div|li|h[1-6]|tr)>", "\n", cleaned)
     cleaned = re.sub(r"(?is)<[^>]+>", " ", cleaned)
-    cleaned = re.sub(r"&nbsp;", " ", cleaned)
-    cleaned = re.sub(r"&amp;", "&", cleaned)
-    cleaned = re.sub(r"&lt;", "<", cleaned)
-    cleaned = re.sub(r"&gt;", ">", cleaned)
-    cleaned = re.sub(r"&#\d+;", " ", cleaned)
+    # Decode named + numeric entities (Ho&agrave;ng → Hoàng). Do NOT blank &#NNN;.
+    cleaned = html_lib.unescape(cleaned)
+    cleaned = cleaned.replace("\xa0", " ")
     cleaned = re.sub(r"[ \t]+", " ", cleaned)
     cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
     return cleaned.strip()

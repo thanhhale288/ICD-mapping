@@ -1,0 +1,459 @@
+{
+  "phase": "P3.1",
+  "generated_at": "2026-10-30T02:36:24+07:00",
+  "operators_covered": 7,
+  "candidate_rows": 23,
+  "operators": [
+    {
+      "operator": "Tân Cảng Sài Gòn",
+      "operator_key": "tan_cang_sai_gon",
+      "network_urls": [
+        "https://saigonnewport.com.vn/cang-cong-ty",
+        "https://saigonnewport.com.vn/"
+      ],
+      "pages": [
+        {
+          "url": "https://saigonnewport.com.vn/cang-cong-ty",
+          "status": "LINK_CHẾT",
+          "http_code": 500,
+          "title": "500 Server Error",
+          "reason": "HTTP 500",
+          "tier": 1,
+          "final_url": "https://saigonnewport.com.vn/cang-cong-ty",
+          "catalog": false
+        },
+        {
+          "url": "https://saigonnewport.com.vn/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Trang chủ | Saigon Newport Corp.(SNP)",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://saigonnewport.com.vn/",
+          "catalog": false
+        }
+      ],
+      "scrape_failed": false,
+      "blocked_or_failed_pages": [
+        {
+          "url": "https://saigonnewport.com.vn/cang-cong-ty",
+          "status": "LINK_CHẾT",
+          "http_code": 500,
+          "title": "500 Server Error",
+          "reason": "HTTP 500",
+          "tier": 1,
+          "final_url": "https://saigonnewport.com.vn/cang-cong-ty",
+          "catalog": false
+        }
+      ],
+      "icds": [
+        {
+          "name": "ICD Tân Cảng Hà Nam",
+          "url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-dong-van-ha-nam-icd",
+          "matched_stt": 12,
+          "matched_ten": "Cảng cạn Tân Cảng Hà Nam",
+          "from_seed": true,
+          "source_url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-dong-van-ha-nam-icd"
+        },
+        {
+          "name": "ICD Tân Cảng Hải Phòng",
+          "url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-hai-phong-icd",
+          "matched_stt": 4,
+          "matched_ten": "Cảng cạn Tân Cảng Hải Phòng",
+          "from_seed": true,
+          "source_url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-hai-phong-icd"
+        },
+        {
+          "name": "ICD Tân Cảng Long Bình",
+          "url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-long-binh-icd",
+          "matched_stt": 15,
+          "matched_ten": "Cảng cạn Tân Cảng Long Bình giai đoạn 1",
+          "from_seed": true,
+          "source_url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-long-binh-icd"
+        },
+        {
+          "name": "ICD Tân Cảng Long Bình (website riêng)",
+          "url": "https://icdlongbinh.com/",
+          "matched_stt": 15,
+          "matched_ten": "Cảng cạn Tân Cảng Long Bình giai đoạn 1",
+          "from_seed": true,
+          "source_url": "https://icdlongbinh.com/"
+        },
+        {
+          "name": "Cảng cạn Tân Cảng Mộc Bài",
+          "url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-tay-ninh-icd",
+          "matched_stt": 19,
+          "matched_ten": "Cảng cạn Tân Cảng – Mộc Bài (giai đoạn 1)",
+          "from_seed": true,
+          "source_url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-tay-ninh-icd"
+        },
+        {
+          "name": "ICD Tân Cảng Nhơn Trạch",
+          "url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-nhon-trach-icd",
+          "matched_stt": 14,
+          "matched_ten": "Cảng cạn Tân Cảng Nhơn Trạch",
+          "from_seed": true,
+          "source_url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-nhon-trach-icd"
+        },
+        {
+          "name": "ICD Tân Cảng Quế Võ",
+          "url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-que-vo-icd",
+          "matched_stt": 8,
+          "matched_ten": "Cảng cạn Tân Cảng Quế Võ",
+          "from_seed": true,
+          "source_url": "https://saigonnewport.com.vn/cang-cong-ty/tan-cang-que-vo-icd"
+        },
+        {
+          "name": "ICD Tân Cảng Sóng Thần",
+          "url": "https://saigonnewport.com.vn/cang-cong-ty/icd-tan-cang-song-than",
+          "matched_stt": 106,
+          "matched_ten": "Bình Hòa (Tân Cảng Sóng Thần)",
+          "from_seed": true,
+          "source_url": "https://saigonnewport.com.vn/cang-cong-ty/icd-tan-cang-song-than"
+        },
+        {
+          "name": "ICD Tân Cảng Sóng Thần (website riêng)",
+          "url": "https://www.icdsongthan.com.vn/",
+          "matched_stt": 106,
+          "matched_ten": "Bình Hòa (Tân Cảng Sóng Thần)",
+          "from_seed": true,
+          "source_url": "https://www.icdsongthan.com.vn/"
+        }
+      ],
+      "fetched_at": "2026-10-30T02:36:12+07:00"
+    },
+    {
+      "operator": "Gemadept",
+      "operator_key": "gemadept",
+      "network_urls": [
+        "https://www.gemadept.com.vn/he-sinh-thai-cang-logistics/",
+        "https://www.gemadept.com.vn/dich-vu/khai-thac-cang/"
+      ],
+      "pages": [
+        {
+          "url": "https://www.gemadept.com.vn/he-sinh-thai-cang-logistics/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Hệ sinh thái Cảng - Logistics - Gemadept Corporation",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://www.gemadept.com.vn/he-sinh-thai-cang-logistics/",
+          "catalog": false
+        },
+        {
+          "url": "https://www.gemadept.com.vn/dich-vu/khai-thac-cang/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Khai thác cảng - Gemadept Corporation",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://www.gemadept.com.vn/dich-vu/khai-thac-cang/",
+          "catalog": false
+        }
+      ],
+      "scrape_failed": false,
+      "blocked_or_failed_pages": [],
+      "icds": [
+        {
+          "name": "Cụm Cảng / ICD Nam Đình Vũ",
+          "url": "https://www.gemadept.com.vn/he-sinh-thai-cang-logistics/",
+          "matched_stt": 7,
+          "matched_ten": "Cảng cạn Nam Đình Vũ giai đoạn 1",
+          "from_seed": true,
+          "source_url": "https://www.gemadept.com.vn/he-sinh-thai-cang-logistics/"
+        },
+        {
+          "name": "Nam Hải ICD",
+          "url": "https://www.gemadept.com.vn/nam-hai-icd/",
+          "matched_stt": null,
+          "matched_ten": null,
+          "from_seed": true,
+          "source_url": "https://www.gemadept.com.vn/dich-vu/khai-thac-cang/"
+        },
+        {
+          "name": "Phước Long ICD",
+          "url": "https://www.gemadept.com.vn/phuoc-long-icd/",
+          "matched_stt": null,
+          "matched_ten": null,
+          "from_seed": true,
+          "source_url": "https://www.gemadept.com.vn/dich-vu/khai-thac-cang/"
+        },
+        {
+          "name": "Phước Long ICD (PIP)",
+          "url": "https://pip.gemadept.com.vn/gioi-thieu/tong-quan/",
+          "matched_stt": null,
+          "matched_ten": null,
+          "from_seed": true,
+          "source_url": "https://pip.gemadept.com.vn/gioi-thieu/tong-quan/"
+        }
+      ],
+      "fetched_at": "2026-10-30T02:36:14+07:00"
+    },
+    {
+      "operator": "VIMC",
+      "operator_key": "vimc",
+      "network_urls": [
+        "https://vimclogistics.com/trang-gioi-thieu",
+        "https://www.vimclogistics.com/",
+        "https://vimc.co/chuan-hoa-mo-hinh-cang-can-tai-viet-nam/"
+      ],
+      "pages": [
+        {
+          "url": "https://vimclogistics.com/trang-gioi-thieu",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Trang giới thiệu",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://vimclogistics.com/trang-gioi-thieu",
+          "catalog": false
+        },
+        {
+          "url": "https://www.vimclogistics.com/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Trang chủ",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://www.vimclogistics.com/",
+          "catalog": false
+        },
+        {
+          "url": "https://vimc.co/chuan-hoa-mo-hinh-cang-can-tai-viet-nam/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Chuẩn hóa mô hình cảng cạn tại Việt Nam - Tổng công ty Hàng hải Việt Nam-VIMC",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://vimc.co/chuan-hoa-mo-hinh-cang-can-tai-viet-nam/",
+          "catalog": true
+        }
+      ],
+      "scrape_failed": false,
+      "blocked_or_failed_pages": [],
+      "icds": [
+        {
+          "name": "ICD Đông Phố Mới – tin VIMC",
+          "url": "https://vimc.co/thu-tuong-chinh-phu-pham-minh-chinh-khao-sat-cang-can-dong-pho-moi-tai-lao-cai/",
+          "matched_stt": 1,
+          "matched_ten": "Cảng cạn Đông Phố Mới (Lào Cai)",
+          "from_seed": true,
+          "source_url": "https://vimc.co/thu-tuong-chinh-phu-pham-minh-chinh-khao-sat-cang-can-dong-pho-moi-tai-lao-cai/"
+        },
+        {
+          "name": "Cảng cạn Đông Phố Mới (Lào Cai)",
+          "url": "https://vimclogistics.com/trang-gioi-thieu",
+          "matched_stt": 1,
+          "matched_ten": "Cảng cạn Đông Phố Mới (Lào Cai)",
+          "from_seed": true,
+          "source_url": "https://vimclogistics.com/trang-gioi-thieu"
+        }
+      ],
+      "fetched_at": "2026-10-30T02:36:15+07:00"
+    },
+    {
+      "operator": "TBS",
+      "operator_key": "tbs",
+      "network_urls": [
+        "https://www.tbsgroup.vn/linh-vuc-hoat-dong/logistics-va-cang/",
+        "https://www.tbsgroup.vn/press-center/mo-rong-he-thong-icd-tan-van/"
+      ],
+      "pages": [
+        {
+          "url": "https://www.tbsgroup.vn/linh-vuc-hoat-dong/logistics-va-cang/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Cảng &#038; Logistics | TBS Group",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://www.tbsgroup.vn/linh-vuc-hoat-dong/logistics-va-cang/",
+          "catalog": false
+        },
+        {
+          "url": "https://www.tbsgroup.vn/press-center/mo-rong-he-thong-icd-tan-van/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Mở rộng hệ thống kho bãi ICD Tân Vạn | TBS Group",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://www.tbsgroup.vn/press-center/mo-rong-he-thong-icd-tan-van/",
+          "catalog": true
+        }
+      ],
+      "scrape_failed": false,
+      "blocked_or_failed_pages": [],
+      "icds": [
+        {
+          "name": "ICD TBS Tân Vạn",
+          "url": "https://www.tbsgroup.vn/linh-vuc-hoat-dong/logistics-va-cang/",
+          "matched_stt": 107,
+          "matched_ten": "TBS Tân Vạn Dĩ An",
+          "from_seed": true,
+          "source_url": "https://www.tbsgroup.vn/linh-vuc-hoat-dong/logistics-va-cang/"
+        },
+        {
+          "name": "ICD TBS Tân Vạn (mở rộng kho bãi)",
+          "url": "https://www.tbsgroup.vn/press-center/mo-rong-he-thong-icd-tan-van/",
+          "matched_stt": 107,
+          "matched_ten": "TBS Tân Vạn Dĩ An",
+          "from_seed": true,
+          "source_url": "https://www.tbsgroup.vn/press-center/mo-rong-he-thong-icd-tan-van/"
+        }
+      ],
+      "fetched_at": "2026-10-30T02:36:16+07:00"
+    },
+    {
+      "operator": "Transimex",
+      "operator_key": "transimex",
+      "network_urls": [
+        "https://www.transimex.com.vn/",
+        "https://www.transimex.com.vn/dich-vu/dich-vu-cang-icd-390.html"
+      ],
+      "pages": [
+        {
+          "url": "https://www.transimex.com.vn/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Công Ty Cổ Phần Transimex",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://www.transimex.com.vn/",
+          "catalog": false
+        },
+        {
+          "url": "https://www.transimex.com.vn/dich-vu/dich-vu-cang-icd-390.html",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Giải pháp lưu trữ chứng từ doanh nghiệp",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://www.transimex.com.vn/dich-vu/dich-vu-cang-icd-390.html",
+          "catalog": false
+        }
+      ],
+      "scrape_failed": false,
+      "blocked_or_failed_pages": [],
+      "icds": [
+        {
+          "name": "ICD Transimex",
+          "url": "https://www.transimex.com.vn/dich-vu/dich-vu-cang-icd-390.html",
+          "matched_stt": null,
+          "matched_ten": null,
+          "from_seed": true,
+          "source_url": "https://www.transimex.com.vn/dich-vu/dich-vu-cang-icd-390.html"
+        }
+      ],
+      "fetched_at": "2026-10-30T02:36:18+07:00"
+    },
+    {
+      "operator": "Hateco",
+      "operator_key": "hateco",
+      "network_urls": [
+        "https://hatecologistics.vn/",
+        "https://hatecologistics.vn/cang-can-long-bien/"
+      ],
+      "pages": [
+        {
+          "url": "https://hatecologistics.vn/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Hateco Logistics - Công ty Cổ phần Hateco Logistics cung cấp dịch vụ tại Cảng ICD Long Biên",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://hatecologistics.vn/",
+          "catalog": false
+        },
+        {
+          "url": "https://hatecologistics.vn/cang-can-long-bien/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Công ty CP Hateco Logistics",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://hatecologistics.vn/cang-can-long-bien/",
+          "catalog": false
+        }
+      ],
+      "scrape_failed": false,
+      "blocked_or_failed_pages": [],
+      "icds": [
+        {
+          "name": "Bảng giá dịch vụ ICD Long Biên",
+          "url": "https://hatecologistics.vn/bang-gia-dich-vu-icd-long-bien/",
+          "matched_stt": 11,
+          "matched_ten": "Cảng cạn Long Biên",
+          "from_seed": true,
+          "source_url": "https://hatecologistics.vn/cang-can-long-bien/"
+        },
+        {
+          "name": "ICD Long Biên – Hateco Logistics",
+          "url": "https://hatecologistics.vn/",
+          "matched_stt": 11,
+          "matched_ten": "Cảng cạn Long Biên",
+          "from_seed": true,
+          "source_url": "https://hatecologistics.vn/"
+        },
+        {
+          "name": "Cảng cạn Long Biên (ICD Hateco)",
+          "url": "https://hatecologistics.vn/cang-can-long-bien/",
+          "matched_stt": 11,
+          "matched_ten": "Cảng cạn Long Biên",
+          "from_seed": true,
+          "source_url": "https://hatecologistics.vn/cang-can-long-bien/"
+        }
+      ],
+      "fetched_at": "2026-10-30T02:36:19+07:00"
+    },
+    {
+      "operator": "Sotrans",
+      "operator_key": "sotrans",
+      "network_urls": [
+        "https://sotransgroup.vn/linh-vuc-hoat-dong/khai-thac-cang/",
+        "https://sotrans.com.vn/dich-vu/khai-thac-cang/sotrans-icd/"
+      ],
+      "pages": [
+        {
+          "url": "https://sotransgroup.vn/linh-vuc-hoat-dong/khai-thac-cang/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Khai thác cảng",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://sotransgroup.vn/linh-vuc-hoat-dong/khai-thac-cang/",
+          "catalog": false
+        },
+        {
+          "url": "https://sotrans.com.vn/dich-vu/khai-thac-cang/sotrans-icd/",
+          "status": "MỞ_ĐƯỢC",
+          "http_code": 200,
+          "title": "Cảng SOTRANS ICD &#8211; SOTRANS",
+          "reason": "",
+          "tier": 1,
+          "final_url": "https://sotrans.com.vn/dich-vu/khai-thac-cang/sotrans-icd/",
+          "catalog": false
+        }
+      ],
+      "scrape_failed": false,
+      "blocked_or_failed_pages": [],
+      "icds": [
+        {
+          "name": "ICD SOTRANS",
+          "url": "https://sotrans.com.vn/dich-vu/khai-thac-cang/sotrans-icd/",
+          "matched_stt": null,
+          "matched_ten": null,
+          "from_seed": true,
+          "source_url": "https://sotrans.com.vn/dich-vu/khai-thac-cang/sotrans-icd/"
+        },
+        {
+          "name": "SOWATCO Long Bình",
+          "url": "https://sotrans.com.vn/dich-vu/khai-thac-cang/sotrans-icd/",
+          "matched_stt": 98,
+          "matched_ten": "Long Bình (TP.HCM cũ)",
+          "from_seed": true,
+          "source_url": "https://sotrans.com.vn/dich-vu/khai-thac-cang/sotrans-icd/"
+        }
+      ],
+      "fetched_at": "2026-10-30T02:36:22+07:00"
+    }
+  ]
+}
