@@ -98,6 +98,10 @@ OPENED_PATTERNS = [
     r"quyết định.{0,30}mở cảng cạn",
     r"quyet dinh.{0,30}mo cang can",
     r"công bố mở cảng cạn",
+    # QĐ công bố theo NĐ 38/2014 (trước 2017) dùng "công bố cảng cạn <tên>" — chỉ nhận
+    # dạng văn bản QĐ ("Nay công bố cảng cạn", "Quyết định … công bố cảng cạn").
+    r"nay công bố cảng cạn",
+    r"quyết định [0-9/]+/qđ-bgtvt công bố cảng cạn",
 ]
 
 PLANNED_PATTERNS = [
@@ -304,11 +308,14 @@ def load_check_by_url(
     for path in paths:
         for row in _read_csv(path):
             url = (row.get("url") or "").strip()
-            if url:
-                idx[normalize_url(url)] = row
-            final_u = (row.get("final_url") or "").strip()
-            if final_u:
-                idx[normalize_url(final_u)] = row
+            st = (row.get("stt") or "").strip()
+            # Cùng 1 URL có thể được chấm cho nhiều STT (khớp STT này, không khớp STT kia):
+            # khóa (stt, url) là chính; khóa url-only chỉ là dự phòng.
+            for u in {url, (row.get("final_url") or "").strip()}:
+                if u:
+                    idx[normalize_url(u)] = row
+                    if st:
+                        idx[(st, normalize_url(u))] = row
     return idx
 
 
@@ -528,11 +535,19 @@ def gather_evidence_for_stt(
         if nu in seen:
             continue
         seen.add(nu)
-        row = check_idx.get(nu) or {}
+        row = check_idx.get((str(stt), nu)) or check_idx.get(nu) or {}
         status = (row.get("status") or "").strip()
         # ưu tiên text đã khớp; vẫn đọc nếu có text_path
         text_path = (row.get("text_path") or "").strip()
         text = read_evidence_text(text_path)
+        if not text:
+            # file text riêng STT có thể không tồn tại (cache lưu theo STT khác) →
+            # mượn text cùng URL; trạng thái khớp vẫn lấy theo (stt, url).
+            alt = (check_idx.get(nu) or {}).get("text_path", "").strip()
+            if alt and alt != text_path:
+                text = read_evidence_text(alt)
+                if text:
+                    text_path = alt
         if not text and not status:
             continue
         if status and status not in (
@@ -866,6 +881,21 @@ class MatchedGateTests(unittest.TestCase):
 
 
 class V4Tests(unittest.TestCase):
+    def test_old_style_cong_bo(self):
+        t = "Quyết định 3882/QĐ-BGTVT công bố cảng cạn Km3 4 Móng Cái. Nay công bố cảng cạn Km3+4 Móng Cái, tỉnh Quảng Ninh với nội dung cơ bản sau đây."
+        r = propose_from_texts([Evidence(url="u", text=t, matched=True, check_status="MỞ_ĐƯỢC_KHỚP", text_path="", screenshot="", source_date=date(2015, 10, 30))], today=date(2026, 10, 30), had_search_rounds=True, ten="Cảng cạn Km3+4 Móng Cái, tỉnh Quảng Ninh")
+        self.assertEqual(r["trang_thai"], STATUS_OPENED)
+        r2 = propose_from_texts([Evidence(url="u", text="Tỉnh sẽ công bố cảng cạn Km3+4 Móng Cái trong năm tới.", matched=True, check_status="MỞ_ĐƯỢC_KHỚP", text_path="", screenshot="", source_date=date(2015, 10, 30))], today=date(2026, 10, 30), had_search_rounds=True, ten="Cảng cạn Km3+4 Móng Cái, tỉnh Quảng Ninh")
+        self.assertNotEqual(r2["trang_thai"], STATUS_OPENED)
+
+    def test_check_idx_per_stt(self):
+        import tempfile
+        d = Path(tempfile.mkdtemp()) / "c.csv"
+        d.write_text("stt,url,status,final_url\n18,http://x/a,MỞ_ĐƯỢC_KHỚP,\n116,http://x/a,MỞ_ĐƯỢC_KHÔNG_KHỚP,\n", encoding="utf-8")
+        idx = load_check_by_url([d])
+        self.assertEqual(idx[("18", normalize_url("http://x/a"))]["status"], "MỞ_ĐƯỢC_KHỚP")
+        self.assertEqual(idx[("116", normalize_url("http://x/a"))]["status"], "MỞ_ĐƯỢC_KHÔNG_KHỚP")
+
     def test_hedged_active_ignored(self):
         for t in ["Cảng cạn Long Biên dự kiến năm 2026 sẽ đưa vào khai thác.",
                   "Cảng cạn Long Biên: chưa có cảng container được đưa vào khai thác.",

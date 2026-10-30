@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T08:01:19+00:00",
+  "generated_at": "2026-10-31T00:13:34+07:00",
   "phase": "3-fill",
   "ung_vien_unique_urls": 1609,
   "unchecked_urls": 0,
@@ -17,11 +17,11 @@
   "qd428_with_link": 19,
   "qd428_missing": [],
   "trang_thai_distribution": {
-    "Chưa đủ thông tin": 57,
+    "Chưa đủ thông tin": 55,
     "Chưa triển khai (mới quy hoạch)": 54,
-    "Đang hoạt động": 7,
-    "Đang xây dựng / chuẩn bị đầu tư": 6,
-    "Đã công bố mở, chưa xác nhận đang khai thác": 3,
+    "Đang hoạt động": 8,
+    "Đã công bố mở, chưa xác nhận đang khai thác": 5,
+    "Đang xây dựng / chuẩn bị đầu tư": 5,
     "Đã ngừng / di dời": 1
   },
   "tra_cuu_fills": 119,
@@ -39,18 +39,18 @@
   "trang_thai_no_source": 37,
   "tra_cuu_stts": 63,
   "trang_thai_confidence": {
-    "thap": 94,
-    "trung_binh": 26,
-    "cao": 8
+    "thap": 91,
+    "trung_binh": 28,
+    "cao": 9
   },
-  "can_duyet_tay": 40,
+  "can_duyet_tay": 41,
   "ung_vien_check_status": {
-    "MỞ_ĐƯỢC_KHÔNG_KHỚP": 962,
-    "MỞ_ĐƯỢC_KHỚP": 660,
-    "CHỈ_KHỚP_CHUNG": 480,
+    "MỞ_ĐƯỢC_KHÔNG_KHỚP": 1027,
+    "MỞ_ĐƯỢC_KHỚP": 666,
+    "CHỈ_KHỚP_CHUNG": 481,
     "LINK_CHẾT": 252,
-    "BỊ_CHẶN": 97,
-    "LỖI_SSL_MỞ_ĐƯỢC": 96
+    "LỖI_SSL_MỞ_ĐƯỢC": 96,
+    "BỊ_CHẶN": 25
   },
   "recheck_bi_chan_tier2": {
     "BỊ_CHẶN": 97,
