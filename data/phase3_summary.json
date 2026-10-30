@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T06:37:54+00:00",
+  "generated_at": "2026-10-30T06:40:17+00:00",
   "phase": "3-fill",
   "ung_vien_unique_urls": 1609,
   "unchecked_urls": 0,
@@ -17,14 +17,15 @@
   "qd428_with_link": 19,
   "qd428_missing": [],
   "trang_thai_distribution": {
-    "Chưa triển khai (mới quy hoạch)": 45,
-    "Chưa đủ thông tin": 28,
-    "Đang hoạt động": 27,
-    "Đang xây dựng / chuẩn bị đầu tư": 15,
-    "Đã ngừng / di dời": 13
+    "Chưa đủ thông tin": 58,
+    "Chưa triển khai (mới quy hoạch)": 53,
+    "Đang xây dựng / chuẩn bị đầu tư": 7,
+    "Đang hoạt động": 6,
+    "Đã công bố mở, chưa xác nhận đang khai thác": 3,
+    "Đã ngừng / di dời": 1
   },
   "tra_cuu_fills": 119,
-  "notes": "Fill 30/10/2026: Brave re-search 208 query (hết quota 402 giữa STT 121); Google CSE lỗi 403 (project không có quyền Custom Search JSON API) nên STT 122–128 chưa tìm lại. Check lại theo (stt,url) max-tier 1; verify_website toàn bộ 2500 cặp (max-tier 1). | WebSearch (công cụ của bot) 11 query cho STT 122-125,127,128: +46 URL. propose_status: tín hiệu vận hành chỉ tính từ link khớp ICD; chỉ quy hoạch/QĐ-NQ → Chưa triển khai; override tay STT 123-125 (data/trang_thai_override.csv, nguồn QĐ 979/QĐ 1410).",
+  "notes": "Fill 30/10/2026: Brave re-search 208 query (hết quota 402 giữa STT 121); Google CSE lỗi 403 (project không có quyền Custom Search JSON API) nên STT 122–128 chưa tìm lại. Check lại theo (stt,url) max-tier 1; verify_website toàn bộ 2500 cặp (max-tier 1). | WebSearch (công cụ của bot) 11 query cho STT 122-125,127,128: +46 URL. propose_status: tín hiệu vận hành chỉ tính từ link khớp ICD; chỉ quy hoạch/QĐ-NQ → Chưa triển khai; override tay STT 123-125 (data/trang_thai_override.csv, nguồn QĐ 979/QĐ 1410). | propose_status v3: chỉ dùng câu chứa tên ICD + ngữ cảnh ICD/cảng cạn/logistics; QĐ/NQ/quy hoạch phải gần ICD/cảng cạn/logistics; bỏ 'giải thể thao'; override tay thêm STT 6,13,51 (Chưa đủ thông tin).",
   "ung_vien_unique_pairs": 2663,
   "ung_vien_stts_with_url": 128,
   "checked_stts": 128,
@@ -35,11 +36,11 @@
     "loại": 972,
     "chính thức – đã xác minh": 34
   },
-  "trang_thai_no_source": 34,
+  "trang_thai_no_source": 37,
   "tra_cuu_stts": 63,
   "trang_thai_confidence": {
-    "thap": 64,
-    "cao": 40,
-    "trung_binh": 24
+    "thap": 94,
+    "trung_binh": 27,
+    "cao": 7
   }
 }

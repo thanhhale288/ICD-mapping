@@ -98,14 +98,35 @@ OPENED_PATTERNS = [
 ]
 
 PLANNED_PATTERNS = [
-    r"quy hoạch",
-    r"quy hoach",
-    r"định hướng đến năm 2030",
-    r"trong quy hoạch",
-    r"\b979/QĐ-TTg",
-    r"\d+/(?:QĐ|NQ)-(?:UBND|HĐND|TTg)",
-    r"định hướng",
+    # "quy hoạch" chỉ tính khi gần ICD/cảng cạn/logistics
+    r"quy ho[aạ]ch[\s\S]{0,120}?(?:ICD|cảng cạn|cang can|logistics)",
+    r"(?:ICD|cảng cạn|cang can|logistics)[\s\S]{0,120}?quy ho[aạ]ch",
+    # QĐ/NQ chỉ tính khi có ICD/cảng cạn/logistics trong ~150 ký tự
+    r"\d+/(?:QĐ|NQ)-(?:UBND|HĐND|TTg)[\s\S]{0,150}?(?:ICD|cảng cạn|cang can|logistics)",
+    r"(?:ICD|cảng cạn|cang can|logistics)[\s\S]{0,150}?\d+/(?:QĐ|NQ)-(?:UBND|HĐND|TTg)",
+    r"định hướng[\s\S]{0,80}?(?:ICD|cảng cạn|cang can|logistics)",
 ]
+
+ICD_CONTEXT = re.compile(r"\bICD\b|cảng cạn|cang can|logistics|cảng nội địa|kho bãi|cảng khô", re.I)
+
+_NAME_STRIP = re.compile(r"\(.*?\)|cảng cạn|cang can|\bICD\b|[–-].*$", re.I)
+
+
+def core_name(ten: str) -> str:
+    n = _NAME_STRIP.sub(" ", ten or "")
+    return re.sub(r"\s+", " ", n).strip()
+
+
+def focus_text(text: str, ten: str) -> str:
+    """Chỉ giữ câu chứa tên ICD VÀ từ ngữ cảnh ICD/cảng cạn/logistics/cảng —
+    bỏ menu/sidebar/tin không liên quan và địa danh trùng tên (sân bay, cảng cá…)."""
+    name = core_name(ten)
+    if not text or len(re.sub(r"[^A-Za-zÀ-ỹ]", "", name)) < 3:
+        return text
+    sents = [x for x in re.split(r"(?<=[.!?])\s+|\n+", text) if x.strip()]
+    keep = [x for x in sents if name.lower() in x.lower() and ICD_CONTEXT.search(x)]
+    return " ".join(keep)
+
 
 MATCHED_STATUSES = {"MỞ_ĐƯỢC_KHỚP", "ĐÃ_XÁC_MINH_TAY"}
 
@@ -127,8 +148,8 @@ STOPPED_PATTERNS = [
     r"ngung hoat dong",
     r"di dời",
     r"di doi",
-    r"giải thể",
-    r"giai the",
+    r"giải thể(?!\s*thao)",
+    r"giai the(?!\s*thao)",
 ]
 
 
@@ -256,6 +277,7 @@ def propose_from_texts(
     *,
     today: date | None = None,
     had_search_rounds: bool = False,
+    ten: str = "",
 ) -> dict[str, str]:
     """
     Đề xuất trạng thái từ danh sách evidence (đã lọc MỞ_ĐƯỢC_KHỚP nếu có).
@@ -280,6 +302,12 @@ def propose_from_texts(
         "planned": [],
         "stopped": [],
     }
+    if ten:
+        evidences = [
+            Evidence(e.url, focus_text(e.text or "", ten), e.text_path, e.screenshot,
+                     e.source_date, e.check_status, e.matched)
+            for e in evidences
+        ]
     for ev in evidences:
         t = ev.text or ""
         if not t:
@@ -482,7 +510,7 @@ def run_propose(
                 "do_tin_cay": "thap",
             }
         else:
-            prop = propose_from_texts(evidences, today=today, had_search_rounds=had)
+            prop = propose_from_texts(evidences, today=today, had_search_rounds=had, ten=ten)
         rows.append(
             {
                 "stt": str(stt),
@@ -715,6 +743,36 @@ class MatchedGateTests(unittest.TestCase):
                            out_path=tmp / "o.csv", override_path=ov)
         self.assertEqual(rows[4]["trang_thai"], STATUS_PLANNED)
         self.assertEqual(rows[5]["trang_thai"], STATUS_UNKNOWN)
+
+    def test_sidebar_keyword_far_from_name_ignored(self) -> None:
+        txt = ("Mở cảng cạn ICD Phúc Lộc tại Ninh Bình. ICD Phúc Lộc phục vụ hàng hóa.\n"
+               "Tin khác: doanh nghiệp ngừng hoạt động kinh doanh chưa đóng mã số thuế.")
+        ev = Evidence("u", txt, "", "", None, "MỞ_ĐƯỢC_KHỚP", matched=True)
+        r = propose_from_texts([ev], today=date(2026, 10, 30), had_search_rounds=True,
+                               ten="Cảng cạn (ICD) Phúc Lộc – Ninh Bình")
+        self.assertNotEqual(r["trang_thai"], STATUS_STOPPED)
+
+    def test_keyword_near_name_counts(self) -> None:
+        txt = "Menu. ICD Phúc Lộc đã đi vào hoạt động năm 2025. Liên hệ."
+        ev = Evidence("u", txt, "", "", None, "MỞ_ĐƯỢC_KHỚP", matched=True)
+        r = propose_from_texts([ev], today=date(2026, 10, 30), had_search_rounds=True, ten="ICD Phúc Lộc")
+        self.assertEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_qd_number_without_icd_context_not_planned(self) -> None:
+        ev = Evidence("u", "Hoàng Thành: Số 50/QĐ-UBND ngày 09/01/2026 danh sách thôn vùng DTTS",
+                      "", "", None, "MỞ_ĐƯỢC_KHÔNG_KHỚP", matched=False)
+        r = propose_from_texts([ev], today=date(2026, 10, 30), had_search_rounds=True, ten="Cảng cạn Hoàng Thành")
+        self.assertNotEqual(r["trang_thai"], STATUS_PLANNED)
+
+    def test_qd_number_with_icd_context_planned(self) -> None:
+        ev = Evidence("u", "Cảng cạn Hà Tiên theo 979/QĐ-TTg, công suất 50.000 TEU",
+                      "", "", None, "CHỈ_KHỚP_CHUNG", matched=False)
+        r = propose_from_texts([ev], today=date(2026, 10, 30), had_search_rounds=True, ten="Hà Tiên")
+        self.assertEqual(r["trang_thai"], STATUS_PLANNED)
+
+    def test_core_name(self) -> None:
+        self.assertEqual(core_name("Cảng cạn (ICD) Phúc Lộc – Ninh Bình"), "Phúc Lộc")
+        self.assertEqual(core_name("Châu Thành (Hậu Giang cũ)"), "Châu Thành")
 
     def test_ssl_row_needs_name_and_area(self) -> None:
         self.assertTrue(is_matched_row({"status": "LỖI_SSL_MỞ_ĐƯỢC", "khop_ten": "1", "khop_dia_ban": "1"}))
