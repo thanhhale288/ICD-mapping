@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30T06:40:17+00:00",
+  "generated_at": "2026-10-30T06:50:05+00:00",
   "phase": "3-fill",
   "ung_vien_unique_urls": 1609,
   "unchecked_urls": 0,
@@ -17,15 +17,15 @@
   "qd428_with_link": 19,
   "qd428_missing": [],
   "trang_thai_distribution": {
-    "Chưa đủ thông tin": 58,
-    "Chưa triển khai (mới quy hoạch)": 53,
-    "Đang xây dựng / chuẩn bị đầu tư": 7,
-    "Đang hoạt động": 6,
+    "Chưa đủ thông tin": 57,
+    "Chưa triển khai (mới quy hoạch)": 54,
+    "Đang hoạt động": 7,
+    "Đang xây dựng / chuẩn bị đầu tư": 6,
     "Đã công bố mở, chưa xác nhận đang khai thác": 3,
     "Đã ngừng / di dời": 1
   },
   "tra_cuu_fills": 119,
-  "notes": "Fill 30/10/2026: Brave re-search 208 query (hết quota 402 giữa STT 121); Google CSE lỗi 403 (project không có quyền Custom Search JSON API) nên STT 122–128 chưa tìm lại. Check lại theo (stt,url) max-tier 1; verify_website toàn bộ 2500 cặp (max-tier 1). | WebSearch (công cụ của bot) 11 query cho STT 122-125,127,128: +46 URL. propose_status: tín hiệu vận hành chỉ tính từ link khớp ICD; chỉ quy hoạch/QĐ-NQ → Chưa triển khai; override tay STT 123-125 (data/trang_thai_override.csv, nguồn QĐ 979/QĐ 1410). | propose_status v3: chỉ dùng câu chứa tên ICD + ngữ cảnh ICD/cảng cạn/logistics; QĐ/NQ/quy hoạch phải gần ICD/cảng cạn/logistics; bỏ 'giải thể thao'; override tay thêm STT 6,13,51 (Chưa đủ thông tin).",
+  "notes": "Fill 30/10/2026: Brave re-search 208 query (hết quota 402 giữa STT 121); Google CSE lỗi 403 (project không có quyền Custom Search JSON API) nên STT 122–128 chưa tìm lại. Check lại theo (stt,url) max-tier 1; verify_website toàn bộ 2500 cặp (max-tier 1). | WebSearch (công cụ của bot) 11 query cho STT 122-125,127,128: +46 URL. propose_status: tín hiệu vận hành chỉ tính từ link khớp ICD; chỉ quy hoạch/QĐ-NQ → Chưa triển khai; override tay STT 123-125 (data/trang_thai_override.csv, nguồn QĐ 979/QĐ 1410). | propose_status v3: chỉ dùng câu chứa tên ICD + ngữ cảnh ICD/cảng cạn/logistics; QĐ/NQ/quy hoạch phải gần ICD/cảng cạn/logistics; bỏ 'giải thể thao'; override tay thêm STT 6,13,51 (Chưa đủ thông tin). | propose_status v4: thêm câu liền sau bắt đầu bằng Cảng/ICD (chỉ link MỞ_ĐƯỢC_KHỚP); cụm vận hành mới (đón container đầu tiên, khai trương, đưa vào khai thác) có chặn phủ định/tương lai và yêu cầu tên ICD gần; khởi công năm tương lai → Chưa triển khai. Danh sách duyệt tay: data/can_duyet_tay_trang_thai.csv (40 STT).",
   "ung_vien_unique_pairs": 2663,
   "ung_vien_stts_with_url": 128,
   "checked_stts": 128,
@@ -40,7 +40,8 @@
   "tra_cuu_stts": 63,
   "trang_thai_confidence": {
     "thap": 94,
-    "trung_binh": 27,
-    "cao": 7
-  }
+    "trung_binh": 26,
+    "cao": 8
+  },
+  "can_duyet_tay": 40
 }

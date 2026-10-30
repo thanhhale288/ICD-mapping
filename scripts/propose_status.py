@@ -57,6 +57,9 @@ COLUMNS = [
 # --- Từ khóa (Phụ lục C.5) ---
 
 ACTIVE_PATTERNS = [
+    r"đón (?:container|chuyến hàng|chuyến tàu|lô hàng)[^.]{0,30}đầu tiên",
+    r"khai trương",
+    r"đưa vào khai thác",
     r"đi vào hoạt động",
     r"di vao hoat dong",
     r"khánh thành",
@@ -117,15 +120,78 @@ def core_name(ten: str) -> str:
     return re.sub(r"\s+", " ", n).strip()
 
 
-def focus_text(text: str, ten: str) -> str:
-    """Chỉ giữ câu chứa tên ICD VÀ từ ngữ cảnh ICD/cảng cạn/logistics/cảng —
-    bỏ menu/sidebar/tin không liên quan và địa danh trùng tên (sân bay, cảng cá…)."""
+ADJ_START = re.compile(r"^\W*(?:cảng cạn|cảng|icd)\b", re.I)
+
+
+def split_sents(text: str) -> list[str]:
+    return [x.strip() for x in re.split(r"(?<=[.!?])\s+|\n+", text) if x.strip()]
+
+
+def focus_text(text: str, ten: str, allow_adjacent: bool = False) -> str:
+    """Chỉ giữ câu chứa tên ICD VÀ từ ngữ cảnh ICD/cảng cạn/logistics —
+    bỏ menu/sidebar/tin không liên quan và địa danh trùng tên.
+    allow_adjacent (chỉ cho link MỞ_ĐƯỢC_KHỚP): thêm đúng 1 câu NGAY SAU câu
+    neo nếu câu đó bắt đầu bằng "Cảng"/"Cảng cạn"/"ICD"."""
     name = core_name(ten)
     if not text or len(re.sub(r"[^A-Za-zÀ-ỹ]", "", name)) < 3:
         return text
-    sents = [x for x in re.split(r"(?<=[.!?])\s+|\n+", text) if x.strip()]
-    keep = [x for x in sents if name.lower() in x.lower() and ICD_CONTEXT.search(x)]
-    return " ".join(keep)
+    sents = split_sents(text)
+    keep: list[str] = []
+    for i, x in enumerate(sents):
+        if name.lower() in x.lower() and ICD_CONTEXT.search(x):
+            keep.append(x)
+            if allow_adjacent and i + 1 < len(sents) and ADJ_START.search(sents[i + 1]) \
+                    and name.lower() not in sents[i + 1].lower():
+                keep.append(sents[i + 1])
+    return " ".join(dict.fromkeys(keep))
+
+
+HEDGE = re.compile(r"(?:sẽ|dự kiến|mục tiêu|chưa|kế hoạch|phấn đấu|nhằm|kỳ vọng|đề xuất|không|đầu tư xây dựng|cùng với đó là)\W+(?:\w+\W+){0,6}$", re.I)
+NEW_ACTIVE = [r"đón (?:container|chuyến hàng|chuyến tàu|lô hàng)[^.]{0,30}đầu tiên", r"khai trương", r"đưa vào khai thác"]
+
+
+def active_hit(text: str, ten: str = "") -> bool:
+    """Từ khóa vận hành chỉ tính khi KHÔNG có từ phủ định/tương lai ngay trước
+    (sẽ, dự kiến, mục tiêu, chưa…). Cụm mới (khai trương, đưa vào khai thác,
+    đón … đầu tiên) còn phải có tên ICD trong cùng câu."""
+    name = core_name(ten).lower()
+    for x in split_sents(text):
+        for pat in ACTIVE_PATTERNS:
+            for m in re.finditer(pat, x, re.I):
+                if HEDGE.search(x[max(0, m.start() - 60):m.start()]):
+                    continue
+                if re.match(r"\W*(?:sẽ|là mục tiêu)", x[m.end():], re.I):
+                    continue
+                if pat in NEW_ACTIVE and name and name not in x[max(0, m.start() - 60):m.end() + 60].lower():
+                    continue
+                return True
+    return False
+
+
+_YEAR = re.compile(r"\b(20\d\d)\b")
+_PHASE = re.compile(r"giai đoạn\s*(20\d\d)\s*[-–]\s*(20\d\d)", re.I)
+
+
+def split_future_building(text: str, today: date) -> tuple[str, str]:
+    """Tách câu có từ khóa xây dựng nhưng là kế hoạch tương lai
+    (mọi năm trong câu > năm hiện tại, hoặc 'giai đoạn 20xx–20xx' bắt đầu sau năm nay).
+    Trả về (text_còn_lại, các_câu_kế_hoạch_tương_lai)."""
+    rest, fut = [], []
+    yr = re.compile(r"\b(20\d\d)(?:\s*[-–]\s*20\d\d)?\b")
+    for x in split_sents(text):
+        ms = [m for p in BUILDING_PATTERNS for m in re.finditer(p, x, re.I)]
+        if ms:
+            def is_future(m):
+                before = yr.findall(x[:m.start()])
+                if before:  # mốc năm gần nhất phía trước (đầu khoảng nếu là giai đoạn)
+                    return int(before[-1]) > today.year
+                after = yr.findall(x[m.end():m.end() + 60])
+                return bool(after) and int(after[0]) > today.year
+            if all(is_future(m) for m in ms):
+                fut.append(x)
+                continue
+        rest.append(x)
+    return " ".join(rest), " ".join(fut)
 
 
 MATCHED_STATUSES = {"MỞ_ĐƯỢC_KHỚP", "ĐÃ_XÁC_MINH_TAY"}
@@ -301,10 +367,12 @@ def propose_from_texts(
         "opened": [],
         "planned": [],
         "stopped": [],
+        "future": [],
     }
     if ten:
         evidences = [
-            Evidence(e.url, focus_text(e.text or "", ten), e.text_path, e.screenshot,
+            Evidence(e.url, focus_text(e.text or "", ten,
+                                       allow_adjacent=e.check_status == "MỞ_ĐƯỢC_KHỚP"), e.text_path, e.screenshot,
                      e.source_date, e.check_status, e.matched)
             for e in evidences
         ]
@@ -317,11 +385,15 @@ def propose_from_texts(
             if _has_any(t, PLANNED_PATTERNS):
                 flags["planned"].append(ev)
             continue
+        t, fut = split_future_building(t, today)
+        if fut:
+            flags["future"].append(Evidence(ev.url, fut, ev.text_path, ev.screenshot,
+                                            ev.source_date, ev.check_status, ev.matched))
         if _has_any(t, STOPPED_PATTERNS):
             flags["stopped"].append(ev)
         if _has_any(t, BUILDING_PATTERNS):
             flags["building"].append(ev)
-        if _has_any(t, ACTIVE_PATTERNS) and _year_in_active_ok(t, ev.source_date, today):
+        if active_hit(t, ten) and _year_in_active_ok(t, ev.source_date, today):
             flags["active"].append(ev)
         if _has_any(t, OPENED_PATTERNS):
             flags["opened"].append(ev)
@@ -391,6 +463,16 @@ def propose_from_texts(
             OPENED_PATTERNS,
             "chỉ có quyết định/công bố mở — chưa có bằng chứng đang khai thác (R5)",
             "trung_binh",
+        )
+
+    if flags["future"] and not flags["planned"]:
+        ev = flags["future"][0]
+        return pack(
+            STATUS_PLANNED,
+            ev,
+            BUILDING_PATTERNS,
+            "khởi công/xây dựng chỉ là kế hoạch tương lai (năm > hiện tại) → chưa triển khai",
+            "thap",
         )
 
     if flags["planned"]:
@@ -780,9 +862,71 @@ class MatchedGateTests(unittest.TestCase):
         self.assertFalse(is_matched_row({"status": "MỞ_ĐƯỢC_KHÔNG_KHỚP"}))
 
 
+class V4Tests(unittest.TestCase):
+    def test_hedged_active_ignored(self):
+        for t in ["Cảng cạn Long Biên dự kiến năm 2026 sẽ đưa vào khai thác.",
+                  "Cảng cạn Long Biên: chưa có cảng container được đưa vào khai thác.",
+                  "Mục tiêu đầu tư xây dựng, đưa vào khai thác cảng cạn Long Biên."]:
+            self.assertNotEqual(self._r(t)["trang_thai"], STATUS_ACTIVE, t)
+
+    def test_future_after_phrase_ignored(self):
+        r = self._r("Cảng cạn Long Biên được công bố mở. Cảng đi vào hoạt động sẽ là điểm thông quan quan trọng.")
+        self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_new_phrase_other_port_ignored(self):
+        r = self._r("Cảng cạn Long Biên của Hateco. Cảng Hateco đã đưa vào khai thác cảng HHIT tại Lạch Huyện.")
+        self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    D = date(2026, 10, 30)
+
+    def _r(self, txt, st="MỞ_ĐƯỢC_KHỚP", ten="Cảng cạn Long Biên"):
+        ev = Evidence("u", txt, "", "", None, st, matched=st == "MỞ_ĐƯỢC_KHỚP")
+        return propose_from_texts([ev], today=self.D, ten=ten)
+
+    def test_adjacent_cang_sentence_counts(self):
+        r = self._r("Cảng cạn Long Biên nằm ở Hà Nội. Cảng chính thức đi vào hoạt động năm 2017.")
+        self.assertEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_adjacent_unrelated_sentence_ignored(self):
+        r = self._r("Cảng cạn Long Biên nằm ở Hà Nội. Nhà máy bia khánh thành năm 2020.")
+        self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_non_adjacent_cang_sentence_ignored(self):
+        r = self._r("Cảng cạn Long Biên nằm ở Hà Nội. Thời tiết đẹp. Cảng đi vào hoạt động.")
+        self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_adjacent_not_allowed_on_ssl_or_unmatched(self):
+        r = self._r("Cảng cạn Long Biên nằm ở Hà Nội. Cảng đi vào hoạt động.", st="MỞ_ĐƯỢC_KHÔNG_KHỚP")
+        self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_sidebar_still_ignored(self):
+        r = self._r("Tin khác\nICD Tiên Sơn khai trương kho mới\nCảng cạn Long Biên là đầu mối logistics.")
+        self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_first_container_is_active(self):
+        r = self._r("ICD Tân Cảng Hải Phòng đón container hàng đầu tiên.", ten="Cảng cạn Tân Cảng Hải Phòng")
+        self.assertEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_future_groundbreaking_is_planned(self):
+        r = self._r("Năm 2028 – 2032, khởi công khu logistics cảng cạn Long Biên.")
+        self.assertEqual(r["trang_thai"], STATUS_PLANNED)
+
+    def test_future_phase_is_planned(self):
+        r = self._r("Cảng cạn Long Biên giai đoạn 2030–2035 sẽ khởi công.")
+        self.assertEqual(r["trang_thai"], STATUS_PLANNED)
+
+    def test_multi_phase_sentence(self):
+        r = self._r("Giai đoạn 2025 - 2028, lập quy hoạch; năm 2028 - 2032, khởi công khu logistics cảng cạn Long Biên.")
+        self.assertEqual(r["trang_thai"], STATUS_PLANNED)
+
+    def test_past_groundbreaking_is_building(self):
+        r = self._r("Năm 2025 khởi công cảng cạn Long Biên.")
+        self.assertEqual(r["trang_thai"], STATUS_BUILDING)
+
+
 def main(argv: list[str]) -> int:
     if len(argv) >= 2 and argv[1] == "test":
-        suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromTestCase(c) for c in (ProposeStatusTests, MatchedGateTests)])
+        suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromTestCase(c) for c in (ProposeStatusTests, MatchedGateTests, V4Tests)])
         result = unittest.TextTestRunner(verbosity=2).run(suite)
         print(
             f"\n{result.testsRun} tests, "
