@@ -124,7 +124,7 @@ ADJ_START = re.compile(r"^\W*(?:cảng cạn|cảng|icd)\b", re.I)
 
 
 def split_sents(text: str) -> list[str]:
-    return [x.strip() for x in re.split(r"(?<=[.!?])\s+|\n+", text) if x.strip()]
+    return [x.strip() for x in re.split(r"(?<=[.!?])(?:\[\d+\])*\s+|\n+", text) if x.strip()]
 
 
 def focus_text(text: str, ten: str, allow_adjacent: bool = False) -> str:
@@ -160,6 +160,9 @@ def active_hit(text: str, ten: str = "") -> bool:
             for m in re.finditer(pat, x, re.I):
                 if HEDGE.search(x[max(0, m.start() - 60):m.start()]):
                     continue
+                clause = re.split(r"[,;:–]", x[:m.start()])[-1]
+                if re.search(r"\bkhi\b|\bnếu\b", clause, re.I):
+                    continue  # mệnh đề điều kiện: "nhất là khi ... đưa vào khai thác"
                 if re.match(r"\W*(?:sẽ|là mục tiêu)", x[m.end():], re.I):
                     continue
                 if pat in NEW_ACTIVE and name and name not in x[max(0, m.start() - 60):m.end() + 60].lower():
@@ -872,6 +875,13 @@ class V4Tests(unittest.TestCase):
     def test_future_after_phrase_ignored(self):
         r = self._r("Cảng cạn Long Biên được công bố mở. Cảng đi vào hoạt động sẽ là điểm thông quan quan trọng.")
         self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_conditional_khi_ignored(self):
+        r = self._r("Cảng cạn Long Biên là trọng điểm, nhất là khi cao tốc được hoàn thiện và Hà Nội đưa vào khai thác cảng cạn Long Biên.")
+        self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_citation_marker_splits_sentence(self):
+        self.assertEqual(len(split_sents("Cảng A khởi công.[4] Giai đoạn đầu logistics.")), 2)
 
     def test_new_phrase_other_port_ignored(self):
         r = self._r("Cảng cạn Long Biên của Hateco. Cảng Hateco đã đưa vào khai thác cảng HHIT tại Lạch Huyện.")

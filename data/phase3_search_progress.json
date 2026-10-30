@@ -1,6 +1,6 @@
 {
   "mode": "live+fill+websearch",
-  "updated_at": "2026-10-30T06:50:05+00:00",
+  "updated_at": "2026-10-30T08:01:19+00:00",
   "selected_stts": [
     20,
     22,
@@ -246,5 +246,13 @@
     "queries": 11,
     "new_rows": 46,
     "provider": "websearch"
+  },
+  "recheck_bi_chan_tier2": {
+    "BỊ_CHẶN": 97,
+    "LỖI_SSL_MỞ_ĐƯỢC": 1,
+    "MỞ_ĐƯỢC_KHÔNG_KHỚP": 43,
+    "MỞ_ĐƯỢC_KHỚP": 55,
+    "CHỈ_KHỚP_CHUNG": 4,
+    "LINK_CHẾT": 2
   }
 }
