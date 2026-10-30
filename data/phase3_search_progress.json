@@ -1,6 +1,6 @@
 {
-  "mode": "live+fill",
-  "updated_at": "2026-10-30T05:13:10+00:00",
+  "mode": "live+fill+websearch",
+  "updated_at": "2026-10-30T06:37:54+00:00",
   "selected_stts": [
     20,
     22,
@@ -233,5 +233,18 @@
     ],
     "updated_at": "2026-10-30T03:36:46+00:00"
   },
-  "providers_note": "brave: 402 quota exhausted; google: 403 no API access; STT 122,123,124,125,127,128 not re-searched"
+  "providers_note": "brave: 402 quota exhausted; google: 403 no API access; STT 122,123,124,125,127,128 not re-searched",
+  "websearch_fill": {
+    "stts": [
+      122,
+      123,
+      124,
+      125,
+      127,
+      128
+    ],
+    "queries": 11,
+    "new_rows": 46,
+    "provider": "websearch"
+  }
 }

@@ -1,40 +1,45 @@
 {
-  "generated_at": "2026-10-30T05:13:10+00:00",
+  "generated_at": "2026-10-30T06:37:54+00:00",
   "phase": "3-fill",
-  "ung_vien_unique_urls": 662,
+  "ung_vien_unique_urls": 1609,
   "unchecked_urls": 0,
-  "checked": 2501,
+  "checked": 2547,
   "ung_vien_check_by_status": {
-    "MỞ_ĐƯỢC_KHÔNG_KHỚP": 911,
-    "MỞ_ĐƯỢC_KHỚP": 585,
-    "CHỈ_KHỚP_CHUNG": 472,
-    "BỊ_CHẶN": 194,
-    "LINK_CHẾT": 246,
-    "LỖI_SSL_MỞ_ĐƯỢC": 93
+    "MỞ_ĐƯỢC_KHÔNG_KHỚP": 919,
+    "MỞ_ĐƯỢC_KHỚP": 605,
+    "CHỈ_KHỚP_CHUNG": 476,
+    "LINK_CHẾT": 250,
+    "BỊ_CHẶN": 202,
+    "LỖI_SSL_MỞ_ĐƯỢC": 95
   },
-  "link_chon_with_url": 94,
-  "link_chon_empty": 34,
+  "link_chon_with_url": 99,
+  "link_chon_empty": 29,
   "qd428_with_link": 19,
   "qd428_missing": [],
   "trang_thai_distribution": {
-    "Chưa đủ thông tin": 33,
-    "Đang xây dựng / chuẩn bị đầu tư": 14,
-    "Đang hoạt động": 28,
-    "Đã ngừng / di dời": 13,
-    "Chưa triển khai (mới quy hoạch)": 40
+    "Chưa triển khai (mới quy hoạch)": 45,
+    "Chưa đủ thông tin": 28,
+    "Đang hoạt động": 27,
+    "Đang xây dựng / chuẩn bị đầu tư": 15,
+    "Đã ngừng / di dời": 13
   },
-  "tra_cuu_fills": 111,
-  "notes": "Fill 30/10/2026: Brave re-search 208 query (hết quota 402 giữa STT 121); Google CSE lỗi 403 (project không có quyền Custom Search JSON API) nên STT 122–128 chưa tìm lại. Check lại theo (stt,url) max-tier 1; verify_website toàn bộ 2500 cặp (max-tier 1).",
-  "ung_vien_unique_pairs": 2500,
-  "ung_vien_stts_with_url": 124,
-  "checked_stts": 124,
-  "stts_with_MO_DUOC_KHOP": 88,
-  "website_verify_rows": 2500,
+  "tra_cuu_fills": 119,
+  "notes": "Fill 30/10/2026: Brave re-search 208 query (hết quota 402 giữa STT 121); Google CSE lỗi 403 (project không có quyền Custom Search JSON API) nên STT 122–128 chưa tìm lại. Check lại theo (stt,url) max-tier 1; verify_website toàn bộ 2500 cặp (max-tier 1). | WebSearch (công cụ của bot) 11 query cho STT 122-125,127,128: +46 URL. propose_status: tín hiệu vận hành chỉ tính từ link khớp ICD; chỉ quy hoạch/QĐ-NQ → Chưa triển khai; override tay STT 123-125 (data/trang_thai_override.csv, nguồn QĐ 979/QĐ 1410).",
+  "ung_vien_unique_pairs": 2663,
+  "ung_vien_stts_with_url": 128,
+  "checked_stts": 128,
+  "stts_with_MO_DUOC_KHOP": 93,
+  "website_verify_rows": 2546,
   "website_verify_by_conclusion": {
-    "chính thức – đã xác minh": 34,
-    "có khả năng – cần xác nhận": 1518,
-    "loại": 948
+    "có khả năng – cần xác nhận": 1540,
+    "loại": 972,
+    "chính thức – đã xác minh": 34
   },
-  "trang_thai_no_source": 39,
-  "tra_cuu_stts": 59
+  "trang_thai_no_source": 34,
+  "tra_cuu_stts": 63,
+  "trang_thai_confidence": {
+    "thap": 64,
+    "cao": 40,
+    "trung_binh": 24
+  }
 }

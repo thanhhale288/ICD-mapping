@@ -31,6 +31,7 @@ LINK_CHON_CSV = ROOT / "data" / "link_chon.csv"
 LINK_CHECK_CSV = ROOT / "data" / "link_check.csv"
 UNG_VIEN_CHECK_CSV = ROOT / "data" / "ung_vien_check.csv"
 OUT_CSV = ROOT / "data" / "trang_thai_de_xuat.csv"
+OVERRIDE_CSV = ROOT / "data" / "trang_thai_override.csv"  # sửa tay, có nguồn
 
 VN_TZ = timezone(timedelta(hours=7))
 
@@ -101,7 +102,23 @@ PLANNED_PATTERNS = [
     r"quy hoach",
     r"định hướng đến năm 2030",
     r"trong quy hoạch",
+    r"\b979/QĐ-TTg",
+    r"\d+/(?:QĐ|NQ)-(?:UBND|HĐND|TTg)",
+    r"định hướng",
 ]
+
+MATCHED_STATUSES = {"MỞ_ĐƯỢC_KHỚP", "ĐÃ_XÁC_MINH_TAY"}
+
+
+def is_matched_row(row: dict[str, str]) -> bool:
+    st = (row.get("status") or "").strip()
+    if st in MATCHED_STATUSES:
+        return True
+    if st == "LỖI_SSL_MỞ_ĐƯỢC":
+        def truthy(v: str | None) -> bool:
+            return (v or "").strip().lower() in ("1", "true", "yes", "có", "co")
+        return truthy(row.get("khop_ten")) and truthy(row.get("khop_dia_ban"))
+    return False
 
 STOPPED_PATTERNS = [
     r"đã ngừng",
@@ -123,6 +140,8 @@ class Evidence:
     screenshot: str
     source_date: date | None
     check_status: str = ""
+    # True khi link khớp ICD (MỞ_ĐƯỢC_KHỚP / xác minh tay / SSL lỗi nhưng khớp tên+địa bàn).
+    matched: bool = True
 
 
 def _read_csv(path: Path) -> list[dict[str, str]]:
@@ -265,6 +284,11 @@ def propose_from_texts(
         t = ev.text or ""
         if not t:
             continue
+        if not ev.matched:
+            # Link không khớp ICD: chỉ được dùng làm tín hiệu quy hoạch.
+            if _has_any(t, PLANNED_PATTERNS):
+                flags["planned"].append(ev)
+            continue
         if _has_any(t, STOPPED_PATTERNS):
             flags["stopped"].append(ev)
         if _has_any(t, BUILDING_PATTERNS):
@@ -341,14 +365,14 @@ def propose_from_texts(
             "trung_binh",
         )
 
-    if flags["planned"] and had_search_rounds:
+    if flags["planned"]:
         ev = flags["planned"][0]
         return pack(
             STATUS_PLANNED,
             ev,
             PLANNED_PATTERNS,
-            "chỉ thấy quy hoạch; đã có lượt tìm",
-            "trung_binh",
+            "chỉ thấy quy hoạch / QĐ-NQ định hướng; không có bằng chứng vận hành từ link khớp ICD",
+            "trung_binh" if ev.matched else "thap",
         )
 
     # Có text nhưng không khớp từ khóa
@@ -416,6 +440,7 @@ def gather_evidence_for_stt(
                     row.get("title") or "", url, row.get("fetched_at") or "", text[:500]
                 ),
                 check_status=status,
+                matched=is_matched_row(row),
             )
         )
     return evidences, had
@@ -428,6 +453,7 @@ def run_propose(
     check_paths: list[Path] | None = None,
     out_path: Path = OUT_CSV,
     today: date | None = None,
+    override_path: Path | None = None,
 ) -> list[dict[str, str]]:
     if check_paths is None:
         check_paths = [LINK_CHECK_CSV, UNG_VIEN_CHECK_CSV]
@@ -465,6 +491,14 @@ def run_propose(
             }
         )
 
+    if override_path is not None:
+        ov = {r["stt"].strip(): r for r in _read_csv(override_path) if (r.get("stt") or "").strip()}
+        for row in rows:
+            o = ov.get(row["stt"])
+            if o:
+                for c in ("trang_thai", "cau_trich", "url", "ngay_nguon", "ly_do", "do_tin_cay"):
+                    row[c] = o.get(c, "")
+                row["evidence_path"] = ""
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=COLUMNS)
@@ -648,9 +682,49 @@ class ProposeStatusTests(unittest.TestCase):
         self.assertEqual(prop["trang_thai"], STATUS_BUILDING)
 
 
+class MatchedGateTests(unittest.TestCase):
+    def test_active_keyword_ignored_on_unmatched_link(self) -> None:
+        ev = Evidence("u", "Dự án khi đi vào hoạt động năm 2026", "", "", None,
+                      "MỞ_ĐƯỢC_KHÔNG_KHỚP", matched=False)
+        r = propose_from_texts([ev], today=date(2026, 10, 30), had_search_rounds=True)
+        self.assertNotEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_active_keyword_counts_on_matched_link(self) -> None:
+        ev = Evidence("u", "ICD đã đi vào hoạt động năm 2025", "", "", None,
+                      "MỞ_ĐƯỢC_KHỚP", matched=True)
+        r = propose_from_texts([ev], today=date(2026, 10, 30), had_search_rounds=True)
+        self.assertEqual(r["trang_thai"], STATUS_ACTIVE)
+
+    def test_planning_only_maps_to_planned(self) -> None:
+        ev = Evidence("u", "Cảng cạn X theo Quyết định 979/QĐ-TTg, quy hoạch đến 2030",
+                      "", "", None, "CHỈ_KHỚP_CHUNG", matched=False)
+        r = propose_from_texts([ev], today=date(2026, 10, 30), had_search_rounds=False)
+        self.assertEqual(r["trang_thai"], STATUS_PLANNED)
+
+    def test_unmatched_operational_plus_planning_is_planned(self) -> None:
+        evs = [Evidence("a", "khánh thành cảng cá năm 2025", "", "", None, "MỞ_ĐƯỢC_KHÔNG_KHỚP", matched=False),
+               Evidence("b", "NQ 01/NQ-HĐND định hướng ICD", "", "", None, "MỞ_ĐƯỢC_KHÔNG_KHỚP", matched=False)]
+        r = propose_from_texts(evs, today=date(2026, 10, 30), had_search_rounds=True)
+        self.assertEqual(r["trang_thai"], STATUS_PLANNED)
+
+    def test_override_applied(self) -> None:
+        tmp = Path(tempfile.mkdtemp())
+        ov = tmp / "ov.csv"
+        ov.write_text("stt,trang_thai,cau_trich,url,ngay_nguon,ly_do,do_tin_cay\n5,%s,x,u,,sửa tay,trung_binh\n" % STATUS_PLANNED, encoding="utf-8")
+        rows = run_propose(keys_path=tmp / "k.csv", link_chon_path=tmp / "c.csv", check_paths=[tmp / "x.csv"],
+                           out_path=tmp / "o.csv", override_path=ov)
+        self.assertEqual(rows[4]["trang_thai"], STATUS_PLANNED)
+        self.assertEqual(rows[5]["trang_thai"], STATUS_UNKNOWN)
+
+    def test_ssl_row_needs_name_and_area(self) -> None:
+        self.assertTrue(is_matched_row({"status": "LỖI_SSL_MỞ_ĐƯỢC", "khop_ten": "1", "khop_dia_ban": "1"}))
+        self.assertFalse(is_matched_row({"status": "LỖI_SSL_MỞ_ĐƯỢC", "khop_ten": "1", "khop_dia_ban": "0"}))
+        self.assertFalse(is_matched_row({"status": "MỞ_ĐƯỢC_KHÔNG_KHỚP"}))
+
+
 def main(argv: list[str]) -> int:
     if len(argv) >= 2 and argv[1] == "test":
-        suite = unittest.defaultTestLoader.loadTestsFromTestCase(ProposeStatusTests)
+        suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromTestCase(c) for c in (ProposeStatusTests, MatchedGateTests)])
         result = unittest.TextTestRunner(verbosity=2).run(suite)
         print(
             f"\n{result.testsRun} tests, "
@@ -660,7 +734,7 @@ def main(argv: list[str]) -> int:
         )
         return 0 if result.wasSuccessful() else 1
 
-    rows = run_propose()
+    rows = run_propose(override_path=OVERRIDE_CSV)
     from collections import Counter
 
     c = Counter(r["trang_thai"] for r in rows)
