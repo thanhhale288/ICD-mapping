@@ -1,0 +1,49 @@
+{
+  "generated_at": "2026-10-30T10:12:06+07:00",
+  "phase": "3.3-scale",
+  "before": {
+    "checked_rows": 203,
+    "by_status": {
+      "MỞ_ĐƯỢC_KHỚP": 40,
+      "CHỈ_KHỚP_CHUNG": 98,
+      "MỞ_ĐƯỢC_KHÔNG_KHỚP": 41,
+      "BỊ_CHẶN": 6,
+      "LINK_CHẾT": 15,
+      "LỖI_SSL_MỞ_ĐƯỢC": 3
+    }
+  },
+  "after": {
+    "checked_rows": 663,
+    "by_status": {
+      "MỞ_ĐƯỢC_KHÔNG_KHỚP": 100,
+      "MỞ_ĐƯỢC_KHỚP": 167,
+      "CHỈ_KHỚP_CHUNG": 313,
+      "BỊ_CHẶN": 12,
+      "LINK_CHẾT": 66,
+      "LỖI_SSL_MỞ_ĐƯỢC": 5
+    },
+    "checked_stts": 70
+  },
+  "delta_checked_rows": 460,
+  "ung_vien_url_rows": 662,
+  "unique_candidate_keys": 662,
+  "unchecked_remaining": 0,
+  "unchecked_sample": [],
+  "pass1": {
+    "cmd": "python3 scripts/check_links.py ung-vien --unchecked-only --per-stt 0 --max-tier 1",
+    "note": "Ran with full network outside sandbox. Mid-run race with sibling STT 2/6 check resolved before final Pass1; accidental --help|head earlier truncated CSV (recovered via unchecked re-check + cache)."
+  },
+  "pass2": {
+    "escalated": 13,
+    "cmd": "check_one loop max_tier=3 use_cache=False for BỊ_CHẶN + short-text MỞ_ĐƯỢC_KHÔNG_KHỚP gov/press/company",
+    "result_by_status": {
+      "BỊ_CHẶN": 12,
+      "MỞ_ĐƯỢC_KHÔNG_KHỚP": 1
+    },
+    "note": "Mostly thuvienphapluat.vn still BỊ_CHẶN (Cloudflare 403 at tier 3). Merged without dropping other rows."
+  },
+  "artifacts": {
+    "ung_vien_check": "data/ung_vien_check.csv",
+    "phase3_scale_check": "data/phase3_scale_check.json"
+  }
+}
