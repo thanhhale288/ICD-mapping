@@ -47,3 +47,15 @@ python3 scripts/extract_tra_cuu.py
 
 Đầu ra Phase 3: `data/ung_vien.csv`, `ung_vien_check.csv`, `link_chon.csv`, `trang_thai_de_xuat.csv`, `tra_cuu.csv`, `phase3_summary.json`.
 **Xem trực quan:** mở `data/phase3_report.html` trong trình duyệt.
+Nghiệm thu Phase 3 (P3.1–P3.7 → bằng chứng): [docs/phase3_acceptance.md](docs/phase3_acceptance.md).
+
+## Chạy test
+
+```bash
+python -m venv .venv && .venv/bin/pip install -r requirements.txt   # phiên bản đã ghim
+.venv/bin/python -m pytest -q
+```
+
+Test chạy hoàn toàn offline: `tests/conftest.py` chặn socket và giả lập mạng cho `fetch.py`
+(thuvienphapluat/vimawa…). Lệnh `python scripts/<script>.py test` cũ vẫn dùng được; riêng
+`fetch.py test` / `check_links.py test` cần mạng thật. CI: `.github/workflows/ci.yml`.
