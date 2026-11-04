@@ -964,9 +964,43 @@ class V4Tests(unittest.TestCase):
         self.assertEqual(r["trang_thai"], STATUS_BUILDING)
 
 
+class FinalTableTests(unittest.TestCase):
+    """Bảng cuối (data/trang_thai_de_xuat.csv) + file override phải nhất quán."""
+
+    def _load(self):
+        if not OUT_CSV.exists():
+            self.skipTest("chưa có bảng cuối; chạy script trước")
+        with open(OUT_CSV, encoding="utf-8") as fh:
+            out = list(csv.DictReader(fh))
+        ov = []
+        if OVERRIDE_CSV.exists():
+            with open(OVERRIDE_CSV, encoding="utf-8-sig") as fh:
+                ov = list(csv.DictReader(fh))
+        return out, ov
+
+    def test_exactly_128_rows(self):
+        out, _ = self._load()
+        self.assertEqual(len(out), 128)
+
+    def test_no_duplicate_stt(self):
+        out, ov = self._load()
+        stts = [r["stt"] for r in out]
+        self.assertEqual(len(stts), len(set(stts)))
+        ostts = [r["stt"] for r in ov]
+        self.assertEqual(len(ostts), len(set(ostts)))
+
+    def test_override_matches_final_table(self):
+        out, ov = self._load()
+        by = {r["stt"]: r for r in out}
+        for o in ov:
+            self.assertIn(o["stt"], by)
+            for k in ("trang_thai", "cau_trich", "url"):
+                self.assertEqual((o.get(k) or "").strip(), (by[o["stt"]].get(k) or "").strip(), f"stt {o['stt']} {k}")
+
+
 def main(argv: list[str]) -> int:
     if len(argv) >= 2 and argv[1] == "test":
-        suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromTestCase(c) for c in (ProposeStatusTests, MatchedGateTests, V4Tests)])
+        suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromTestCase(c) for c in (ProposeStatusTests, MatchedGateTests, V4Tests, FinalTableTests)])
         result = unittest.TextTestRunner(verbosity=2).run(suite)
         print(
             f"\n{result.testsRun} tests, "
