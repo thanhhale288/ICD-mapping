@@ -1,49 +1,15 @@
 {
-  "generated_at": "2026-10-31T00:13:34+07:00",
+  "generated_at": "2026-11-05T01:23:58+07:00",
   "phase": "3-fill",
+  "trang_thai_rows": 128,
+  "ung_vien_rows": 3204,
   "ung_vien_unique_urls": 1609,
+  "ung_vien_unique_pairs": 2541,
+  "ung_vien_stts_with_url": 128,
+  "ung_vien_empty_stt_rows": 5,
   "unchecked_urls": 0,
   "checked": 2547,
-  "ung_vien_check_by_status": {
-    "MỞ_ĐƯỢC_KHÔNG_KHỚP": 919,
-    "MỞ_ĐƯỢC_KHỚP": 605,
-    "CHỈ_KHỚP_CHUNG": 476,
-    "LINK_CHẾT": 250,
-    "BỊ_CHẶN": 202,
-    "LỖI_SSL_MỞ_ĐƯỢC": 95
-  },
-  "link_chon_with_url": 99,
-  "link_chon_empty": 29,
-  "qd428_with_link": 19,
-  "qd428_missing": [],
-  "trang_thai_distribution": {
-    "Chưa đủ thông tin": 55,
-    "Chưa triển khai (mới quy hoạch)": 54,
-    "Đang hoạt động": 8,
-    "Đã công bố mở, chưa xác nhận đang khai thác": 5,
-    "Đang xây dựng / chuẩn bị đầu tư": 5,
-    "Đã ngừng / di dời": 1
-  },
-  "tra_cuu_fills": 119,
-  "notes": "Fill 30/10/2026: Brave re-search 208 query (hết quota 402 giữa STT 121); Google CSE lỗi 403 (project không có quyền Custom Search JSON API) nên STT 122–128 chưa tìm lại. Check lại theo (stt,url) max-tier 1; verify_website toàn bộ 2500 cặp (max-tier 1). | WebSearch (công cụ của bot) 11 query cho STT 122-125,127,128: +46 URL. propose_status: tín hiệu vận hành chỉ tính từ link khớp ICD; chỉ quy hoạch/QĐ-NQ → Chưa triển khai; override tay STT 123-125 (data/trang_thai_override.csv, nguồn QĐ 979/QĐ 1410). | propose_status v3: chỉ dùng câu chứa tên ICD + ngữ cảnh ICD/cảng cạn/logistics; QĐ/NQ/quy hoạch phải gần ICD/cảng cạn/logistics; bỏ 'giải thể thao'; override tay thêm STT 6,13,51 (Chưa đủ thông tin). | propose_status v4: thêm câu liền sau bắt đầu bằng Cảng/ICD (chỉ link MỞ_ĐƯỢC_KHỚP); cụm vận hành mới (đón container đầu tiên, khai trương, đưa vào khai thác) có chặn phủ định/tương lai và yêu cầu tên ICD gần; khởi công năm tương lai → Chưa triển khai. Danh sách duyệt tay: data/can_duyet_tay_trang_thai.csv (40 STT). | Re-check 202 link BỊ_CHẶN bằng fetch tier 2 (Playwright headless): {\"BỊ_CHẶN\": 97, \"LỖI_SSL_MỞ_ĐƯỢC\": 1, \"MỞ_ĐƯỢC_KHÔNG_KHỚP\": 43, \"MỞ_ĐƯỢC_KHỚP\": 55, \"CHỈ_KHỚP_CHUNG\": 4, \"LINK_CHẾT\": 2}; propose_status: chặn mệnh đề 'khi/nếu', tách câu tại [n].",
-  "ung_vien_unique_pairs": 2663,
-  "ung_vien_stts_with_url": 128,
-  "checked_stts": 128,
-  "stts_with_MO_DUOC_KHOP": 93,
-  "website_verify_rows": 2546,
-  "website_verify_by_conclusion": {
-    "có khả năng – cần xác nhận": 1540,
-    "loại": 972,
-    "chính thức – đã xác minh": 34
-  },
-  "trang_thai_no_source": 37,
-  "tra_cuu_stts": 63,
-  "trang_thai_confidence": {
-    "thap": 91,
-    "trung_binh": 28,
-    "cao": 9
-  },
-  "can_duyet_tay": 41,
+  "checked_stts": 129,
   "ung_vien_check_status": {
     "MỞ_ĐƯỢC_KHÔNG_KHỚP": 1027,
     "MỞ_ĐƯỢC_KHỚP": 666,
@@ -52,6 +18,49 @@
     "LỖI_SSL_MỞ_ĐƯỢC": 96,
     "BỊ_CHẶN": 25
   },
+  "stts_with_MO_DUOC_KHOP": 93,
+  "website_verify_rows": 2546,
+  "website_verify_by_conclusion": {
+    "có khả năng – cần xác nhận": 1564,
+    "loại": 948,
+    "chính thức – đã xác minh": 34
+  },
+  "link_chon_rows": 128,
+  "link_chon_with_url": 99,
+  "link_chon_empty": 29,
+  "qd428_with_link": 19,
+  "qd428_missing": [],
+  "trang_thai_distribution": {
+    "Chưa triển khai (mới quy hoạch)": 98,
+    "Đang hoạt động": 15,
+    "Đã công bố mở, chưa xác nhận đang khai thác": 10,
+    "Đang xây dựng / chuẩn bị đầu tư": 4,
+    "Chưa đủ thông tin": 1
+  },
+  "trang_thai_confidence": {
+    "trung_binh": 64,
+    "cao": 45,
+    "duyet_tay": 17,
+    "thap": 2
+  },
+  "trang_thai_no_source": 3,
+  "non_chua_du_missing_url": [
+    "49",
+    "86"
+  ],
+  "non_chua_du_missing_cau_trich": [
+    "21",
+    "23",
+    "27",
+    "31",
+    "49",
+    "67",
+    "86"
+  ],
+  "tra_cuu_fills": 120,
+  "tra_cuu_stts": 63,
+  "tra_cuu_missing_url_or_quote": 0,
+  "can_duyet_tay": 41,
   "recheck_bi_chan_tier2": {
     "BỊ_CHẶN": 97,
     "LỖI_SSL_MỞ_ĐƯỢC": 1,
@@ -59,5 +68,6 @@
     "MỞ_ĐƯỢC_KHỚP": 55,
     "CHỈ_KHỚP_CHUNG": 4,
     "LINK_CHẾT": 2
-  }
+  },
+  "notes": "Fill 30/10/2026: Brave re-search 208 query (hết quota 402 giữa STT 121); Google CSE lỗi 403 (project không có quyền Custom Search JSON API) nên STT 122–128 chưa tìm lại. Check lại theo (stt,url) max-tier 1; verify_website toàn bộ 2500 cặp (max-tier 1). | WebSearch (công cụ của bot) 11 query cho STT 122-125,127,128: +46 URL. propose_status: tín hiệu vận hành chỉ tính từ link khớp ICD; chỉ quy hoạch/QĐ-NQ → Chưa triển khai; override tay STT 123-125 (data/trang_thai_override.csv, nguồn QĐ 979/QĐ 1410). | propose_status v3: chỉ dùng câu chứa tên ICD + ngữ cảnh ICD/cảng cạn/logistics; QĐ/NQ/quy hoạch phải gần ICD/cảng cạn/logistics; bỏ 'giải thể thao'; override tay thêm STT 6,13,51 (Chưa đủ thông tin). | propose_status v4: thêm câu liền sau bắt đầu bằng Cảng/ICD (chỉ link MỞ_ĐƯỢC_KHỚP); cụm vận hành mới (đón container đầu tiên, khai trương, đưa vào khai thác) có chặn phủ định/tương lai và yêu cầu tên ICD gần; khởi công năm tương lai → Chưa triển khai. Danh sách duyệt tay: data/can_duyet_tay_trang_thai.csv (40 STT). | Re-check 202 link BỊ_CHẶN bằng fetch tier 2 (Playwright headless): {\"BỊ_CHẶN\": 97, \"LỖI_SSL_MỞ_ĐƯỢC\": 1, \"MỞ_ĐƯỢC_KHÔNG_KHỚP\": 43, \"MỞ_ĐƯỢC_KHỚP\": 55, \"CHỈ_KHỚP_CHUNG\": 4, \"LINK_CHẾT\": 2}; propose_status: chặn mệnh đề 'khi/nếu', tách câu tại [n]."
 }

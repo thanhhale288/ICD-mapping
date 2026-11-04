@@ -43,6 +43,7 @@ python3 scripts/verify_website.py from-csv data/ung_vien.csv --limit 80
 python3 scripts/pick_links.py
 python3 scripts/propose_status.py
 python3 scripts/extract_tra_cuu.py
+python3 scripts/phase3_summary.py          # → phase3_summary.json + phase3_report.html
 ```
 
 Đầu ra Phase 3: `data/ung_vien.csv`, `ung_vien_check.csv`, `link_chon.csv`, `trang_thai_de_xuat.csv`, `tra_cuu.csv`, `phase3_summary.json`.
