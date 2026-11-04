@@ -33,5 +33,6 @@ bằng `httpx.MockTransport` + Playwright giả, cache/evidence ghi vào thư m�
 - Còn thiếu câu trích: STT 21, 27, 49, 67, 86 (27 nay là Chưa đủ thông tin; 23 và 31 đã bổ sung ở d3d64fa).
 - STT 49, 86 (Đang hoạt động): không có URL và bằng chứng hiện có mâu thuẫn với trạng thái Đang hoạt động — cần duyệt lại.
 - `ung_vien.csv` có 5 dòng `stt` rỗng (Nam Hải ICD, Phước Long ICD ×2, ICD SOTRANS, ICD Transimex): không khớp ICD nào trong 128, giữ nguyên (vì vậy `checked_stts` = 129).
-- Duyệt tay đợt 2 còn các dòng ghi trong `docs/duyet_tay/audit_dot2_final.md`; đối chiếu QĐ 428 cho 9 dòng vòng 3.
-- Đồng bộ Google Sheet `final_status_phase3` với repo.
+- Duyệt tay đợt 2 còn các dòng ghi trong `docs/duyet_tay/audit_dot2_final.md`.
+- Đối chiếu QĐ 428: không cần — QĐ 428 chỉ gồm stt 1–19 (plan.md; C3 các sheet 1–19 dẫn QĐ 428), 9 dòng vòng 3 (32, 41, 55, 56, 57, 60, 68, 69, 78) không thuộc danh sách.
+- Đồng bộ Google Sheet `final_status_phase3` với repo: ĐẠT (ICD QA xác nhận khớp 128 dòng).
