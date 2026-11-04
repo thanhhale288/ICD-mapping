@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T01:23:58+07:00",
+  "generated_at": "2026-11-05T01:28:12+07:00",
   "phase": "3-fill",
   "trang_thai_rows": 128,
   "ung_vien_rows": 3204,
@@ -31,11 +31,11 @@
   "qd428_with_link": 19,
   "qd428_missing": [],
   "trang_thai_distribution": {
-    "Chưa triển khai (mới quy hoạch)": 98,
+    "Chưa triển khai (mới quy hoạch)": 95,
     "Đang hoạt động": 15,
     "Đã công bố mở, chưa xác nhận đang khai thác": 10,
-    "Đang xây dựng / chuẩn bị đầu tư": 4,
-    "Chưa đủ thông tin": 1
+    "Chưa đủ thông tin": 4,
+    "Đang xây dựng / chuẩn bị đầu tư": 4
   },
   "trang_thai_confidence": {
     "trung_binh": 64,
@@ -50,9 +50,6 @@
   ],
   "non_chua_du_missing_cau_trich": [
     "21",
-    "23",
-    "27",
-    "31",
     "49",
     "67",
     "86"
