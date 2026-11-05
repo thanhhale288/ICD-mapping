@@ -11,10 +11,10 @@ Plan chính: [`plan-final.md`](plan-final.md).
 | 0 – Chuẩn bị | Xong |
 | 1 – fetch / match / check_links | Xong (30/10/2026) |
 | 2 – Kiểm link & sai lệch hiện có | Xong (30/10/2026) |
-| 3 – Tra cứu & chọn link mới | **Đóng** 30/10/2026 (0 unchecked, QĐ428 19/19 G) — chờ Phase 4 duyệt tay |
-| 4 – Duyệt tay | Chưa |
-| 5 – Ghi Excel | Chưa |
-| 6 – Verify & bàn giao | Chưa |
+| 3 – Tra cứu & chọn link mới | **Đóng** 30/10/2026 (0 unchecked, QĐ428 19/19 G) |
+| 4 – Duyệt tay | **Hoàn thành** 05/11/2026 (user duyệt tay + xác minh URL/bot; không cần kiểm lại) |
+| 5 – Ghi Excel | **Hoàn thành** (`scripts/build_excel.py` → file «đã kiểm tra.xlsx») |
+| 6 – Verify & bàn giao | **Hoàn thành** (`scripts/verify.py` PASS; `docs/handover.md`) |
 
 ## Chạy nhanh
 
@@ -60,3 +60,16 @@ python -m venv .venv && .venv/bin/pip install -r requirements.txt   # phiên b�
 Test chạy hoàn toàn offline: `tests/conftest.py` chặn socket và giả lập mạng cho `fetch.py`
 (thuvienphapluat/vimawa…). Lệnh `python scripts/<script>.py test` cũ vẫn dùng được; riêng
 `fetch.py test` / `check_links.py test` cần mạng thật. CI: `.github/workflows/ci.yml`.
+
+
+## Phase 5–6 (bàn giao)
+
+```bash
+.venv/bin/python scripts/build_excel.py
+.venv/bin/python scripts/verify.py --json-out /tmp/verify_report.json
+.venv/bin/python -m pytest -q
+```
+
+- Excel bàn giao: `Thông tin ICD 34 tỉnh năm 2026 - đã kiểm tra.xlsx`
+- Bàn giao: [docs/handover.md](docs/handover.md)
+- Nghiệm thu P4–6: [docs/phase456_acceptance.md](docs/phase456_acceptance.md)

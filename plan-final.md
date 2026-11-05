@@ -49,7 +49,7 @@ flowchart TD
     P5 --> P6["Phase 6: Kiểm tra đầu ra và bàn giao"]
 ```
 
-Phase 1–3 đã đóng (30/10/2026). Phase 3 đã scale tối đa (0 URL ứng viên unchecked). Tiếp theo: Phase 4 duyệt tay → Phase 5 ghi Excel.
+Phase 1–3 đã đóng (30/10/2026). Phase 4 duyệt tay **hoàn thành** 05/11/2026 (user xác nhận đã duyệt + xác minh hết dòng có URL và dòng bot đề xuất). Phase 5–6 **hoàn thành** 05/11/2026 (`scripts/build_excel.py`, `scripts/verify.py` PASS). Không push/PR — chờ duyệt.
 
 ---
 
@@ -180,7 +180,7 @@ Phase 1–3 đã đóng (30/10/2026). Phase 3 đã scale tối đa (0 URL ứng 
 
 ---
 
-## Phase 4 – Duyệt tay (bắt buộc trước khi ghi Excel)
+## Phase 4 – Duyệt tay (bắt buộc trước khi ghi Excel) — **HOÀN THÀNH 05/11/2026**
 
 **P4.1 – Tạo file duyệt `data/review.xlsx`**
 - Gộp đề xuất trạng thái, link chọn, thông tin bổ sung và sai lệch.
@@ -197,7 +197,7 @@ Phase 1–3 đã đóng (30/10/2026). Phase 3 đã scale tối đa (0 URL ứng 
 
 ---
 
-## Phase 5 – Ghi vào Excel (`scripts/build_excel.py`)
+## Phase 5 – Ghi vào Excel (`scripts/build_excel.py`) — **HOÀN THÀNH 05/11/2026**
 
 **P5.1 – Tạo sheet 08 Tân Cảng Quế Võ**
 - Nhân bản sheet `09 Tiên Sơn` để giữ định dạng, đặt giữa sheet 07 và 09.
@@ -217,7 +217,7 @@ Phase 1–3 đã đóng (30/10/2026). Phase 3 đã scale tối đa (0 URL ứng 
 
 ---
 
-## Phase 6 – Kiểm tra đầu ra và bàn giao
+## Phase 6 – Kiểm tra đầu ra và bàn giao — **HOÀN THÀNH 05/11/2026**
 
 **P6.1 – `scripts/verify.py`**
 - 0 ô gốc bị đổi (so từng ô với file gốc).
