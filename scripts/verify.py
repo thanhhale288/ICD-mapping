@@ -30,8 +30,6 @@ SRC = ROOT / "Thông tin ICD 34 tỉnh năm 2026.xlsx"
 OUT = ROOT / "Thông tin ICD 34 tỉnh năm 2026 - đã kiểm tra.xlsx"
 DATA = ROOT / "data"
 FINAL_STATUS = DATA / "final_status.csv"
-if not FINAL_STATUS.exists():
-    FINAL_STATUS = Path("/workspace/icd_phase3_out/final_status.csv")
 
 U979_MARKERS = ("979-qd-ttg", "979/qd-ttg", "quyet-dinh-979-qd-ttg")
 ACTIVE_NEED_G = (

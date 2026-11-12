@@ -20,11 +20,7 @@ def built_workbook(tmp_path_factory):
     sys.path.insert(0, str(SCRIPTS))
     import build_excel
 
-    # Ensure final_status is available inside repo for build
-    fs_src = Path("/workspace/icd_phase3_out/final_status.csv")
-    fs_dst = ROOT / "data" / "final_status.csv"
-    if fs_src.exists():
-        shutil.copy2(fs_src, fs_dst)
+    assert (ROOT / "data" / "final_status.csv").exists()
     info = build_excel.build(dest)
     assert dest.exists()
     return dest, info

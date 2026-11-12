@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "Thông tin ICD 34 tỉnh năm 2026.xlsx"
 OUT = ROOT / "Thông tin ICD 34 tỉnh năm 2026 - đã kiểm tra.xlsx"
 DATA = ROOT / "data"
-FINAL_STATUS = Path("/workspace/icd_phase3_out/final_status.csv")
+FINAL_STATUS = DATA / "final_status.csv"
 U979 = (
     "https://thuvienphapluat.vn/van-ban/Giao-thong-Van-tai/"
     "Quyet-dinh-979-QD-TTg-2023-phe-duyet-Quy-hoach-phat-trien-he-thong-cang-can-2021-2030-576467.aspx"
@@ -527,10 +527,6 @@ def build(dest: Path | None = None) -> dict:
 
     wb.save(dest)
     wb.close()
-
-    # Also sync final_status into repo data/
-    dest_fs = DATA / "final_status.csv"
-    shutil.copy2(FINAL_STATUS, dest_fs)
 
     return {
         "out": str(dest),
